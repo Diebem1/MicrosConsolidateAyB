@@ -48,7 +48,7 @@ namespace ServiceTramasMicros
             #endregion
             while (!_shutdownEvent.WaitOne(0))
             {
-                //Aquí va todo lo que se va a Procesar
+                //Aquí va todo el proceso que el servicio estará realizando
                 #region Leer Directorio
                 DirectoryInfo tramasFolder = null;
                 try
@@ -71,22 +71,70 @@ namespace ServiceTramasMicros
                     WorkerRole.EscribeLog("Error al leer lista de tramas: "
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
-                } 
+                }
                 #endregion
                 foreach (FileInfo tramaTargetFile in tramasList)
                 {
                     #region Limpiar trama (Layout)
+                    //AQUI LOG Debe Crearse para la trama Actual
                     string cadenaTramaBruta = "";
+                    string currentNombreArchivo = tramaTargetFile.Name;
                     ProcesaCadena procesar = new ProcesaCadena();
                     Mensaje currentMensaje = null;
                     Layout currentLayout = null;
                     string currentCadena = "";
 
-                    cadenaTramaBruta = File.ReadAllText(tramaTargetFile.FullName);
-                    currentMensaje = procesar.ProcesarCadena(cadenaTramaBruta.Trim());
-                    currentCadena = procesar.ProcesarDatos(currentMensaje.Data);                    
-                    currentLayout = procesar.GeneraLayout(currentCadena);
-                    EscribirLayoutLimpio(currentLayout);
+                    try
+                    {
+                        cadenaTramaBruta = File.ReadAllText(tramaTargetFile.FullName);
+                        //AQUI LOG Insert Trama Sucia Leída Correctamente
+                    }
+                    catch (Exception)
+                    {
+                        //Aqui log Insert Error al leer trama para convertir a String
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
+                        continue;
+                    }
+                    try
+                    {
+                        currentMensaje = procesar.ProcesarCadena(cadenaTramaBruta.Trim());
+                        //AQUI LOG Insert Trama Sucia Procesada y se convierte en objeto Mensaje
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
+                        continue;
+                    }
+                    if (currentMensaje.Ping.Length > 0 || currentMensaje.Version.Length > 0)
+                    {
+                        //AQUI LOG Insert Trama se mueve por ser Ping o Version
+                        //Mover porque no es un Ticket
+                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
+                        continue;
+                    }
+
+                    try
+                    {
+                        currentCadena = procesar.ProcesarDatos(currentMensaje.Data);
+                        currentLayout = procesar.GeneraLayout(currentCadena);
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log Insert No fue posible ProcesarDatos o Generar Layout| Se incluye StackTrace
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
+                        continue;
+                    }
+                    try
+                    {
+                        EscribirLayoutLimpio(currentLayout);
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log Insert No fue posible Generar Layout Limpio| Se incluye StackTrace
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
+                        continue;
+                    }
                     #endregion
                 }
                 Thread.Sleep(10000);//Esperar antes de volver a iniciar
@@ -209,8 +257,51 @@ namespace ServiceTramasMicros
                                    DateTime.Now.ToString() + @"<br><h3>Detalle del error </h3>" +
                                    @"<br>El error es: <br>" +
                                    ex.Message + @"<br><h3> stack</h3><br>" + ex.StackTrace;
-                WorkerRole.EscribeLog(bodyMail, EventLogEntryType.Error);
+                throw new Exception(bodyMail);
+                //WorkerRole.EscribeLog(bodyMail, EventLogEntryType.Error);
             }
+        }
+        /// <summary>
+        /// Mueve un archivo de una ruta origen a un destino. El archivo al llegar al destino se puede copiar a otra carpeta
+        /// Si el archivo destino ya existe, se agrega al nombre año mes dia segundos milisegundos
+        /// </summary>
+        /// <param name="origen">Ruta completa del archivo a mover</param>
+        /// <param name="destino">Ruta completa del destino del archivo</param>
+        /// <param name="reCopiar">Ruta completa del archivo donde será copiado después de moverlo al destino</param>
+        /// <returns></returns>
+        public static string MoverArchivo(string origen, string destino, string reCopiar = "")
+        {
+            string mensaje = "";
+            try
+            {
+                string extension = destino.ToUpper()
+                                          .Substring(destino.LastIndexOf("."), 3);
+                if (File.Exists(destino))
+                {
+                    destino = destino.ToUpper()
+                              .Replace(extension, DateTime.Now.ToString("yyyyMMddHHmmssfff") + extension);
+                }
+
+                File.Move(origen, destino);
+                if (reCopiar != "")
+                {
+                    try
+                    {
+                        File.Copy(destino, reCopiar);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                mensaje = ("Error al mover archivo desde "
+                                    + "\n Origen [" + origen + "]"
+                                    + "\n hasta destino [" + destino + "]"
+                                    + "\n - " + ex.Message);
+            }
+            return mensaje;
         }
     }
 }
