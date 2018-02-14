@@ -2,22 +2,43 @@
 <Configuracion>
   <config>
     <Puerto>6000</Puerto>
-    <Folder>C:\Micros\Facto\</Folder>    
+    <!--Ruta raíz para todas las carpetas de control de este servicio-->
+    <Folder>C:\Micros\Facto\</Folder>
     <MailNotificacion>soportenextech@gmail.com</MailNotificacion>
     <PasswordMailNotificacion>!m3s4d34yud4</PasswordMailNotificacion>
     <HostMail>smtp.gmail.com</HostMail>
     <PuertoMail>587</PuertoMail>
     <TituloMail>Insidente Micros</TituloMail>
     <MailSoporte></MailSoporte>
-    <Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal> 
+    <Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
     <Version>Next- Technologies Micros 3700</Version>
     <Llave>xxxxxxx</Llave>
     <LocalIp>127.0.0.1</LocalIp>
-  </config> 
-<emisor>    
-  <RFC>OMS131023NU1</RFC>
+    <!--Ruta completa donde este cliente debe recuperar tramas-->
+    <Tramas>C:\Micros\Facto\Tramas</Tramas>
+    <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
+    <FactoVersion>VERSION_32</FactoVersion>
+    <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
+    <ClonarTrama></ClonarTrama>
+  </config>
+  <emisor>
+    <RFC>OMS131023NU1</RFC>
     <Identificador numero="100">1</Identificador>
     <Identificador numero="200">2</Identificador>
     <Identificador numero="300">3</Identificador>
-</emisor>
+  </emisor>
+  <emisor>
+    <RFC>XMS131023NU1</RFC>
+    <Identificador numero="101">1</Identificador>
+    <Identificador numero="201">2</Identificador>
+    <Identificador numero="301">3</Identificador>
+  </emisor>
+  <!--Carpeta por Codigo Error 300-->
+  <Carpeta300 nombre="DefinirRVC">
+    <mensaje>SIN RVC</mensaje>
+  </Carpeta300>
+  <Carpeta300 nombre="NoFacturable">
+    <mensaje>Ticket Cancelado</mensaje>
+    <mensaje>Cancelado</mensaje>
+  </Carpeta300>
 </Configuracion>
