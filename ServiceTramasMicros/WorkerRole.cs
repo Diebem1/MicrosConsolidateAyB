@@ -186,16 +186,30 @@ namespace ServiceTramasMicros
                     }
                     try
                     {
-                        string nombreTramaLimpia = EscribirLayoutLimpio(currentLayout);
+                        string fullPathTramaLimpia = EscribirLayoutLimpio(currentLayout);
                         //AQUI LOG INSERT Trama Limpia Escrita con Nombre nombreTramaLimpia
                         WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
-                        //AQUI LOG INSERT Trama Sucia se mueve a Historicos
+                        //AQUI LOG INSERT Trama Sucia se mueve a Historicos                        
                     }
                     catch (Exception)
                     {
                         //Aquí Log Insert No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio| Se incluye StackTrace
                         string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
                         continue;
+                    }
+                    //General Doc Fiscal si se requiere
+                    if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
+                    {
+                        ServiceTramasMicros.DocumentXml.DocumentoFiscalv11.documentoFiscal docf = LLenarXml(currentLayout);
+                        if (docf != null)
+                        {
+                            //Emisor emi = new Emisor();
+                            //ConfigurarEmisor cf = new ConfigurarEmisor();
+                            //emi = cf.GetEmisor(layout.ltsTender[0].Split('|')[5].Trim(), AppDomain.CurrentDomain.BaseDirectory + @"\Emisor.xml");
+                            //string identificador = emi.identificador;
+                            //docf.sucursal.numero = identificador;
+                            //GenerarXml(docf);
+                        }
                     }
                     #endregion
                 }
@@ -416,6 +430,20 @@ namespace ServiceTramasMicros
             return DateTime.Now.Year.ToString()
                     + @"\" + DateTime.Now.Month.ToString()
                     + @"\" + DateTime.Now.Day.ToString() + @"\";
+        }
+        private DocumentXml.DocumentoFiscalv11.documentoFiscal LLenarXml(Layout layout)
+        {
+            try
+            {
+                ReadElements elemets = new ReadElements();
+                DocumentXml.DocumentoFiscalv11.documentoFiscal docFiscal = new DocumentXml.DocumentoFiscalv11.documentoFiscal();
+                docFiscal = elemets.GenerarDocumento(layout);
+                return docFiscal;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
