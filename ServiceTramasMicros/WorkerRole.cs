@@ -29,6 +29,12 @@ namespace ServiceTramasMicros
                 WorkerRole.EscribeLog("Error archivo Emisor.xml\n"
                     + ex.Message
                     , System.Diagnostics.EventLogEntryType.Error);
+                _shutdownEvent.Set();
+                if (!_thread.Join(3000))
+                { // give the thread 3 seconds to stop
+                    _thread.Abort();
+                }
+
                 return;
             }
             #endregion
@@ -49,7 +55,153 @@ namespace ServiceTramasMicros
             while (!_shutdownEvent.WaitOne(0))
             {
                 //Aquí va todo el proceso que el servicio estará realizando
-                #region Leer Directorio
+                #region Leer Directorio Tramas Sucias
+                DirectoryInfo tramasSuciasFolder = null;
+                try
+                {
+                    tramasSuciasFolder = new DirectoryInfo(cfn.TramasSuciasFolder);
+                }
+                catch (Exception ex)
+                {
+                    string msgEx = "Error al leer directorio tramas sucias: ";
+                    WorkerRole.EscribeLog(msgEx
+                                                + ex.Message
+                                                , System.Diagnostics.EventLogEntryType.Error);
+                    throw new Exception(msgEx);
+                }
+                List<FileInfo> tramasSuciasList = null;
+                try
+                {
+                    tramasSuciasList = tramasSuciasFolder.GetFiles("*.txt").ToList();
+                }
+                catch (Exception ex)
+                {
+                    string msgEx = "Error al leer lista de tramas sucias: ";
+                    WorkerRole.EscribeLog(msgEx
+                                                + ex.Message
+                                                , System.Diagnostics.EventLogEntryType.Error);
+                    throw new Exception(msgEx);
+                }
+                #endregion
+                #region Validar y crear Arbol de Carpetas de la fecha actual
+                string currentAnioMesDia = AnioMesDiaFolder();
+                string fullPathTramasHistoricas = cfn.TramasHistoricasFolder + currentAnioMesDia;//Historicas
+                string fullPathXml = cfn.XmlFolder + currentAnioMesDia;//Xml
+                string fullPathProcesado = cfn.ProcesadoFolder + currentAnioMesDia;//Procesado
+                string fullPathDuplicado = cfn.DuplicadoFolder + currentAnioMesDia;//Duplicado
+                string fullPathError = cfn.ErrorFolder + currentAnioMesDia;//Error
+                string fullPathLogs = cfn.LogsFolder + currentAnioMesDia;//Logs
+                string fullPathNoFacturable = cfn.NoFacturableFolder + currentAnioMesDia;//NoFacturable
+                string fullPathDefinirRVC = cfn.DefinirRVCFolder + currentAnioMesDia;//DefinirRVC
+
+                try
+                {
+                    if (!Directory.Exists(fullPathTramasHistoricas))//Historicas
+                        Directory.CreateDirectory(fullPathTramasHistoricas);
+
+                    if (!Directory.Exists(fullPathXml))//Xml
+                        Directory.CreateDirectory(fullPathXml);
+
+                    if (!Directory.Exists(fullPathProcesado))//Procesado
+                        Directory.CreateDirectory(fullPathProcesado);
+
+                    if (!Directory.Exists(fullPathDuplicado))//Duplicado
+                        Directory.CreateDirectory(fullPathDuplicado);
+
+                    if (!Directory.Exists(fullPathError))//Error
+                        Directory.CreateDirectory(fullPathError);
+
+                    if (!Directory.Exists(fullPathLogs))//Logs
+                        Directory.CreateDirectory(fullPathLogs);
+
+                    if (!Directory.Exists(fullPathNoFacturable))//NoFacturable
+                        Directory.CreateDirectory(fullPathNoFacturable);
+
+                    if (!Directory.Exists(fullPathDefinirRVC))//DefinirRVC
+                        Directory.CreateDirectory(fullPathDefinirRVC);
+                }
+                catch (Exception ex)
+                {
+                    string msgEx = "Error al crear arbol de directorio para AnioMesDia actual [" + currentAnioMesDia + "]: ";
+                    WorkerRole.EscribeLog(msgEx
+                                                + ex.Message
+                                                , System.Diagnostics.EventLogEntryType.Error);
+                    throw new Exception(msgEx);
+                }
+                #endregion
+                #region Primero Procesar Tramas Sucias
+                foreach (FileInfo tramaTargetFile in tramasSuciasList)
+                {
+                    #region Limpiar trama (Layout)
+                    //AQUI LOG Debe Crearse para la trama Actual
+                    string cadenaTramaBruta = "";
+                    string currentNombreArchivo = tramaTargetFile.Name;
+                    string currentTramaHistoricaFullPath = fullPathTramasHistoricas + currentNombreArchivo;
+                    ProcesaCadena procesar = new ProcesaCadena();
+                    Mensaje currentMensaje = null;
+                    Layout currentLayout = null;
+                    string currentCadena = "";
+
+                    try
+                    {
+                        cadenaTramaBruta = File.ReadAllText(tramaTargetFile.FullName);
+                        //AQUI LOG Insert Trama Sucia Leída Correctamente
+                    }
+                    catch (Exception)
+                    {
+                        //Aqui log Insert Error al leer trama para convertir a String
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        continue;
+                    }
+                    try
+                    {
+                        currentMensaje = procesar.ProcesarCadena(cadenaTramaBruta.Trim());
+                        //AQUI LOG Insert Trama Sucia Procesada y se convierte en objeto Mensaje
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        continue;
+                    }
+                    if (currentMensaje.Ping.Length > 0 || currentMensaje.Version.Length > 0)
+                    {
+                        //AQUI LOG Insert Trama se mueve por ser Ping o Version
+                        //Mover porque no es un Ticket
+                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        continue;
+                    }
+
+                    try
+                    {
+                        currentCadena = procesar.ProcesarDatos(currentMensaje.Data);
+                        currentLayout = procesar.GeneraLayout(currentCadena);
+                        //AQUI LOG INSERT Trama procesada sin problemas para ser Layout 
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log Insert No fue posible ProcesarDatos o Generar Layout| Se incluye StackTrace
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        continue;
+                    }
+                    try
+                    {
+                        string nombreTramaLimpia = EscribirLayoutLimpio(currentLayout);
+                        //AQUI LOG INSERT Trama Limpia Escrita con Nombre nombreTramaLimpia
+                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        //AQUI LOG INSERT Trama Sucia se mueve a Historicos
+                    }
+                    catch (Exception)
+                    {
+                        //Aquí Log Insert No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio| Se incluye StackTrace
+                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        continue;
+                    }
+                    #endregion
+                }
+                #endregion
+
+                #region Leer Directorio Tramas Limpias
                 DirectoryInfo tramasFolder = null;
                 try
                 {
@@ -73,70 +225,6 @@ namespace ServiceTramasMicros
                                                 , System.Diagnostics.EventLogEntryType.Error);
                 }
                 #endregion
-                foreach (FileInfo tramaTargetFile in tramasList)
-                {
-                    #region Limpiar trama (Layout)
-                    //AQUI LOG Debe Crearse para la trama Actual
-                    string cadenaTramaBruta = "";
-                    string currentNombreArchivo = tramaTargetFile.Name;
-                    ProcesaCadena procesar = new ProcesaCadena();
-                    Mensaje currentMensaje = null;
-                    Layout currentLayout = null;
-                    string currentCadena = "";
-
-                    try
-                    {
-                        cadenaTramaBruta = File.ReadAllText(tramaTargetFile.FullName);
-                        //AQUI LOG Insert Trama Sucia Leída Correctamente
-                    }
-                    catch (Exception)
-                    {
-                        //Aqui log Insert Error al leer trama para convertir a String
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
-                        continue;
-                    }
-                    try
-                    {
-                        currentMensaje = procesar.ProcesarCadena(cadenaTramaBruta.Trim());
-                        //AQUI LOG Insert Trama Sucia Procesada y se convierte en objeto Mensaje
-                    }
-                    catch (Exception)
-                    {
-                        //Aquí Log No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
-                        continue;
-                    }
-                    if (currentMensaje.Ping.Length > 0 || currentMensaje.Version.Length > 0)
-                    {
-                        //AQUI LOG Insert Trama se mueve por ser Ping o Version
-                        //Mover porque no es un Ticket
-                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
-                        continue;
-                    }
-
-                    try
-                    {
-                        currentCadena = procesar.ProcesarDatos(currentMensaje.Data);
-                        currentLayout = procesar.GeneraLayout(currentCadena);
-                    }
-                    catch (Exception)
-                    {
-                        //Aquí Log Insert No fue posible ProcesarDatos o Generar Layout| Se incluye StackTrace
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
-                        continue;
-                    }
-                    try
-                    {
-                        EscribirLayoutLimpio(currentLayout);
-                    }
-                    catch (Exception)
-                    {
-                        //Aquí Log Insert No fue posible Generar Layout Limpio| Se incluye StackTrace
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, (cfn.TramasHistoricasFolder + currentNombreArchivo));
-                        continue;
-                    }
-                    #endregion
-                }
                 Thread.Sleep(10000);//Esperar antes de volver a iniciar
             }
         }
@@ -180,6 +268,12 @@ namespace ServiceTramasMicros
                 if (!Directory.Exists(cfn.TramasFolder))
                     Directory.CreateDirectory(cfn.TramasFolder);
 
+                if (!Directory.Exists(cfn.TramasSuciasFolder))
+                    Directory.CreateDirectory(cfn.TramasSuciasFolder);
+
+                if (!Directory.Exists(cfn.TramasHistoricasFolder))
+                    Directory.CreateDirectory(cfn.TramasHistoricasFolder);
+
                 if (!Directory.Exists(cfn.ProcesadoFolder))
                     Directory.CreateDirectory(cfn.ProcesadoFolder);
 
@@ -208,13 +302,19 @@ namespace ServiceTramasMicros
                             , System.Diagnostics.EventLogEntryType.Error);
             }
         }
-        public void EscribirLayoutLimpio(Layout layout)
+        public string EscribirLayoutLimpio(Layout layout)
         {
+            string nombreTramaLimpia = cfn.TramasFolder + layout.nombreArchivo + ".txt";
             try
             {
+                if (File.Exists(nombreTramaLimpia))
+                {
+                    nombreTramaLimpia = nombreTramaLimpia.ToUpper()
+                              .Replace(".TXT", "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + ".txt");
+                }
                 if (layout != null)
                 {
-                    StreamWriter archivoLog = new StreamWriter(cfn.TramasFolder + layout.nombreArchivo + ".txt");
+                    StreamWriter archivoLog = new StreamWriter(nombreTramaLimpia);
                     layout.ltsTender.ForEach(x =>
                     {
                         archivoLog.WriteLine(x);
@@ -249,6 +349,11 @@ namespace ServiceTramasMicros
                         archivoLog.Flush();
                     });
                     archivoLog.Close();
+                    return nombreTramaLimpia;
+                }
+                else
+                {
+                    throw new Exception("El objeto Layout fue Nulo");
                 }
             }
             catch (Exception ex)
@@ -258,7 +363,6 @@ namespace ServiceTramasMicros
                                    @"<br>El error es: <br>" +
                                    ex.Message + @"<br><h3> stack</h3><br>" + ex.StackTrace;
                 throw new Exception(bodyMail);
-                //WorkerRole.EscribeLog(bodyMail, EventLogEntryType.Error);
             }
         }
         /// <summary>
@@ -302,6 +406,16 @@ namespace ServiceTramasMicros
                                     + "\n - " + ex.Message);
             }
             return mensaje;
+        }
+        /// <summary>
+        /// Devuelve un string sin diagonal inicial y con diagonal final con una estructura de carpetas por Año, Mes y Día con base a la fecha del sistema
+        /// </summary>
+        /// <returns></returns>
+        public static string AnioMesDiaFolder()
+        {
+            return DateTime.Now.Year.ToString()
+                    + @"\" + DateTime.Now.Month.ToString()
+                    + @"\" + DateTime.Now.Day.ToString() + @"\";
         }
     }
 }

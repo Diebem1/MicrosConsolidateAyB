@@ -17,9 +17,9 @@
     <!--Ruta completa donde se depositan tramas limpias, para posteriormente procesarlas-->
     <Tramas>C:\Micros\Facto\Tramas</Tramas>
     <!--Ruta completa donde este cliente debe recuperar tramas sucias generadas por el Socket-->
-    <TramasSucias></TramasSucias>
+    <TramasSucias>C:\Micros\Facto\TramasSucias</TramasSucias>
     <!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
-    <TramasHistoricas></TramasHistoricas>
+    <TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
     <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
     <FactoVersion>VERSION_32</FactoVersion>
     <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->

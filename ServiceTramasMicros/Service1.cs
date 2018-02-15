@@ -34,7 +34,7 @@ namespace ServiceTramasMicros
         }
         public void Process()
         {
-            //Console.WriteLine("Activado");
+            Console.WriteLine("Activado");
             workerRole._thread = new Thread(workerRole.WorkerThreadFunc);
             workerRole._thread.Name = "Service Tramas Micros";
             workerRole._thread.IsBackground = true;
