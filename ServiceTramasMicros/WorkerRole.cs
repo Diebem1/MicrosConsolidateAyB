@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace ServiceTramasMicros
 {
@@ -208,7 +209,7 @@ namespace ServiceTramasMicros
                             //emi = cf.GetEmisor(layout.ltsTender[0].Split('|')[5].Trim(), AppDomain.CurrentDomain.BaseDirectory + @"\Emisor.xml");
                             //string identificador = emi.identificador;
                             //docf.sucursal.numero = identificador;
-                            //GenerarXml(docf);
+                            GenerarXml(docf);
                         }
                     }
                     #endregion
@@ -443,6 +444,74 @@ namespace ServiceTramasMicros
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+        private void GenerarXml(DocumentXml.DocumentoFiscalv11.documentoFiscal documento)
+        {
+            try
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(DocumentXml.DocumentoFiscalv11.documentoFiscal));
+                string carpeta;
+                string prefijo;
+                FileInfo newFile;
+                List<FileInfo> fileArray = new List<FileInfo>();
+                DirectoryInfo infoDirectorio;
+                StreamWriter objfile;
+
+                string carpetaXml = cfn.XmlFolder;
+                if (documento.emisor.rfc != "")
+                {
+                    prefijo = documento.emisor.rfc + "-";
+                }
+                else
+                {
+                    prefijo = "";
+                }
+                //obtenemos los xml de la carpeta c:/facto/xml
+                infoDirectorio = new DirectoryInfo(carpetaXml);
+                fileArray = infoDirectorio.GetFiles("*.xml").ToList();
+                if (fileArray.Count() > 0)
+                {
+                    //recorremos los archivos encontrados 
+                    foreach (FileInfo archivo in fileArray)
+                    {
+                        try
+                        {
+                            string reName = "";
+                            newFile = new FileInfo(cfn.XmlFolder + @"\" + archivo.Name);
+                            reName = newFile.Name.Replace(".xml", "");
+                            // buscamos is existe el numero en la carpeta
+                            if (reName == documento.numeroTransaccion)
+                            {
+                                prefijo = "_" + DateTime.Now.Millisecond;
+                            }
+                            else
+                            {
+                                prefijo = "";
+                            }
+                            objfile = new StreamWriter(cfn.XmlFolder + prefijo + documento.numeroTransaccion + ".xml");
+                            xmlSerializer.Serialize(objfile, documento);
+                            objfile.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            //EscribeLog(DateTime.Now.ToString() + ": Error al generalr el xml " + ex.Message);
+                            
+                        }
+                    }
+
+                }
+                else
+                {
+                    objfile = new StreamWriter(cfn.XmlFolder + prefijo + documento.numeroTransaccion + ".xml");
+                    xmlSerializer.Serialize(objfile, documento);
+                    objfile.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //EscribeLog(DateTime.Now.ToString() + ": " + "Se ha generado al contruir el xml " + ex.Message);                
             }
         }
     }
