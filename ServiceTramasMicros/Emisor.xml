@@ -26,8 +26,8 @@
     <ClonarTrama></ClonarTrama>
   </config>
   <emisor>
-    <RFC>OMS131023NU1</RFC>
-    <Identificador numero="1">9</Identificador>
+    <RFC>HHO900507844</RFC>
+    <Identificador numero="1">53</Identificador>
     <Identificador numero="200">2</Identificador>
     <Identificador numero="300">3</Identificador>
   </emisor>
@@ -37,12 +37,4 @@
     <Identificador numero="201">2</Identificador>
     <Identificador numero="301">3</Identificador>
   </emisor>
-  <!--Carpeta por Codigo Error 300-->
-  <Carpeta300 nombre="DefinirRVC">
-    <mensaje>SIN RVC</mensaje>
-  </Carpeta300>
-  <Carpeta300 nombre="NoFacturable">
-    <mensaje>Ticket Cancelado</mensaje>
-    <mensaje>Cancelado</mensaje>
-  </Carpeta300>
 </Configuracion>

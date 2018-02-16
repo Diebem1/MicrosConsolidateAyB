@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ServiceTramasMicros
@@ -258,10 +259,17 @@ namespace ServiceTramasMicros
                 #endregion
 
                 #region Leer Directorio Tramas Limpias
-                DirectoryInfo tramasFolder = null;
+                DirectoryInfo archivosFolder = null;
                 try
                 {
-                    tramasFolder = new DirectoryInfo(cfn.TramasFolder);
+                    if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
+                    {
+                        archivosFolder = new DirectoryInfo(cfn.XmlFolder);
+                    }
+                    else
+                    {
+                        archivosFolder = new DirectoryInfo(cfn.TramasFolder);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -269,10 +277,18 @@ namespace ServiceTramasMicros
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                 }
-                List<FileInfo> tramasList = null;
+
+                List<FileInfo> archivosList = null;
                 try
                 {
-                    tramasList = tramasFolder.GetFiles("*.txt").ToList();
+                    if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
+                    {
+                        archivosList = archivosFolder.GetFiles("*.Xml").ToList();
+                    }
+                    else
+                    {
+                        archivosList = archivosFolder.GetFiles("*.txt").ToList();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -282,9 +298,10 @@ namespace ServiceTramasMicros
                 }
                 #endregion
                 #region Segundo: Leer tramas Limpias para enviar a Facto
-                foreach (FileInfo tramaTargetFile in tramasList)
+                foreach (FileInfo tramaTargetFile in archivosList)
                 {
                     Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
+                    EnviarDatosFacto(tramaTargetFile.FullName);
                 }
                 #endregion
                 Thread.Sleep(10000);//Esperar antes de volver a iniciar
@@ -524,6 +541,134 @@ namespace ServiceTramasMicros
             {
                 throw new Exception("Error al crear el archivo XML [" + ex.Message + "]");
             }
+        }
+        /// <summary>
+        /// Enviar datos al WS
+        /// </summary>
+        /// <param name="nombreArchivo">Ruta completa del archivo</param>
+        /// <returns></returns>
+        public Facto.endPointIntegracionResponse EnviarDatosFacto(string nombreArchivo)
+        {
+            Facto.endPointIntegracionResponse respuesta = new Facto.endPointIntegracionResponse();
+            try
+            {
+                using (Facto.FactoEndPointsService servicio = new Facto.FactoEndPointsService())
+                {
+                    Facto.endPointIntegracionRequest request = new Facto.endPointIntegracionRequest();
+                    Emisor em = null;
+                    Facto.enumVersionCfdiIntegracion versionCfdi = (Facto.enumVersionCfdiIntegracion)System.Enum.Parse(typeof(Facto.enumVersionCfdiIntegracion), cfn.FactoVersion);
+
+                    if (versionCfdi == Facto.enumVersionCfdiIntegracion.DOCUMENTO_FISCAL)
+                    {
+                        em = GetEmisorFromXMLTrama(nombreArchivo);
+                    }
+                    else
+                    {
+                        em = GetEmisorFromTXTTrama(nombreArchivo);
+                    }
+
+                    #region Información Emisor Facto
+                    request.emisor = new Facto.emisor();
+                    request.emisor.rfc = em.rfc;
+                    #endregion
+                    #region Información para Facto
+                    request.informacionFacto = new Facto.informacionFacto();
+                    request.informacionFacto.identificadorIntegracion = em.mapeoIDsList.FirstOrDefault().Value;
+                    request.informacionFacto.foliosFacto = false;
+                    request.informacionFacto.integracion = Facto.enumIntegracion.MICROS;
+                    request.informacionFacto.integracionSpecified = true;
+                    request.informacionFacto.versionCfdi = versionCfdi;
+                    request.informacionFacto.versionCfdiSpecified = true;
+                    #endregion
+                    request.file = ConvertFileToByteArray(nombreArchivo);
+
+                    respuesta = servicio.procesarIntegracion(request, "xxxxxxx");
+                }
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.codigo = 500;
+                respuesta.mensaje = ex.Message;
+                return respuesta;
+            }
+        }
+        /// <summary>
+        /// Convierte un archivo a Bytes
+        /// </summary>
+        /// <param name="fileName">Ruta completa del archivo</param>
+        /// <returns></returns>
+        private byte[] ConvertFileToByteArray(string fileName)
+        {
+            return File.ReadAllBytes(fileName);
+            /*codigo viejo
+            FileInfo fi = new FileInfo(fileName);
+            FileStream fs = fi.OpenRead();
+            long numByte = fs.Length;
+            byte[] byteArrayFile = new byte[numByte - 1];
+
+            string xx = Encoding.ASCII.GetString(byteArrayFile);
+            if (numByte > 0)
+            {
+                fs.Read(byteArrayFile, 0, byteArrayFile.Length);
+                fs.Close();
+            }
+            return byteArrayFile;
+            */
+        }
+        /// <summary>
+        /// Regresa objeto emisor con datos necesarios
+        /// Importante: El XML en el Nodo 'sucursal' elemento 'numero' ya viene el ID de reemplazo; en el nodo 'emisor' elemento 'rfc' viene el RFC
+        /// </summary>
+        /// <param name="nombreArchivo"></param>
+        /// <returns></returns>
+        private Emisor GetEmisorFromXMLTrama(string nombreArchivo)
+        {
+            Emisor emisor = new Emisor();
+            try
+            {
+                XDocument xmlDocFiscal = XDocument.Load(nombreArchivo);
+                XNamespace currentNameSpace = xmlDocFiscal.Root.Name.Namespace;
+                XElement emisorRfcNodo = xmlDocFiscal.Root.Elements(currentNameSpace + "emisor").Elements(currentNameSpace + "rfc").FirstOrDefault();
+                XElement sucursalNumeroNodo = xmlDocFiscal.Root.Elements(currentNameSpace + "sucursal").Elements(currentNameSpace + "numero").FirstOrDefault();
+                emisor.rfc = emisorRfcNodo.Value;
+                emisor.mapeoIDsList.Add("X", sucursalNumeroNodo.Value);
+            }
+            catch (Exception)
+            {
+            }
+            return emisor;
+        }
+        /// <summary>
+        /// Regresa objeto emisor con datos necesarios
+        /// </summary>
+        /// <param name="nombreArchivo"></param>
+        /// <returns></returns>
+        private Emisor GetEmisorFromTXTTrama(string nombreArchivo)
+        {
+            Emisor emisor = new Emisor();
+            try
+            {
+                string idMicrosTrama = "";//IdMicros
+                string identificador = "";//IdReemplazo
+                //Primera linea de la trama
+                string primerTrama = File.ReadAllLines(nombreArchivo)[0];
+                if (primerTrama.StartsWith("T"))
+                {
+                    idMicrosTrama = primerTrama.Split('|')[5].Trim();//Id Micros en la trama
+                    emisor = emisorCfnList.Where(x => x.mapeoIDsList.TryGetValue(idMicrosTrama, out identificador)).FirstOrDefault();
+                    if (!String.IsNullOrEmpty(identificador))
+                    {
+                        emisor.mapeoIDsList.Clear();
+                        emisor.mapeoIDsList.Add("X", identificador);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return emisor;
         }
     }
 }
