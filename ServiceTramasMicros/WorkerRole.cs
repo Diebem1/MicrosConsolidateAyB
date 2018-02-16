@@ -300,8 +300,72 @@ namespace ServiceTramasMicros
                 #region Segundo: Leer tramas Limpias para enviar a Facto
                 foreach (FileInfo tramaTargetFile in archivosList)
                 {
+                    //AQUI LOG CREAR Para trama Actual
+                    #region Carpetas a donde puede irse la trama
+                    string currentNombreArchivo = tramaTargetFile.Name;
+                    string currentTramaProcesado = fullPathProcesado + currentNombreArchivo;
+                    string currentTramaDuplicado = fullPathDuplicado + currentNombreArchivo;
+                    string currentTramaDefinirRVC = fullPathDefinirRVC + currentNombreArchivo;
+                    string currentTramaNoFacturable = fullPathNoFacturable + currentNombreArchivo;
+                    string currentTramaError = fullPathError + currentNombreArchivo;
+                    string currentTramaClon = cfn.ClonarTramaFolder + currentNombreArchivo;
+                    #endregion
                     Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
-                    EnviarDatosFacto(tramaTargetFile.FullName);
+                    Respuesta = EnviarDatosFacto(tramaTargetFile.FullName);
+                    if (Respuesta.codigo == 100)
+                    {
+                        #region Procesados
+                        MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon);
+                        //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
+                        continue;
+                        #endregion
+                    }
+                    else if (Respuesta.codigo == 200)
+                    {
+                        #region Duplicados
+                        MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado);
+                        //AQUÍ LOG INSERT Trama Duplicada; Indicar el nombre con el que se guardó
+                        continue;
+                        #endregion
+                    }
+                    else if (!String.IsNullOrEmpty(Respuesta.mensaje))
+                    {
+                        #region DefinirRVC
+                        if (Respuesta.mensaje.ToUpper().Contains(("No se encontró un Identificador").ToUpper())
+                            || Respuesta.mensaje.ToUpper().Contains(("RVC").ToUpper())
+                            || Respuesta.mensaje.ToUpper().Contains(("RFC Emisor").ToUpper())
+                            )
+                        {
+                            MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC);
+                            //AQUÍ LOG INSERT Trama DefinirRVC
+                            continue;
+                        }
+                        #endregion
+                        #region NoFacturable
+                        else if (Respuesta.mensaje.ToUpper().Contains(("Cancelad").ToUpper()))//Se omite la 'a' intencionalmente
+                        {
+                            MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable);
+                            //AQUÍ LOG INSERT Trama No facturable
+                            continue;
+                        }
+                        #endregion
+                        #region Error
+                        else
+                        {
+                            MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                            //AQUÍ LOG INSERT Error
+                            continue;
+                        }
+                        #endregion
+                    }
+                    #region Error
+                    else
+                    {
+                        MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                        //AQUÍ LOG INSERT Error
+                        continue;
+                    }
+                    #endregion
                 }
                 #endregion
                 Thread.Sleep(10000);//Esperar antes de volver a iniciar
@@ -453,10 +517,9 @@ namespace ServiceTramasMicros
         /// <param name="origen">Ruta completa del archivo a mover</param>
         /// <param name="destino">Ruta completa del destino del archivo</param>
         /// <param name="reCopiar">Ruta completa del archivo donde será copiado después de moverlo al destino</param>
-        /// <returns></returns>
+        /// <returns>Regresa el nombre de archivo completo en destino</returns>
         public static string MoverArchivo(string origen, string destino, string reCopiar = "")
         {
-            string mensaje = "";
             try
             {
                 string extension = destino.ToUpper()
@@ -468,25 +531,30 @@ namespace ServiceTramasMicros
                 }
 
                 File.Move(origen, destino);
+                //AQUI INSERT LOG TRAMA SE MUEVE
                 if (reCopiar != "")
                 {
                     try
                     {
                         File.Copy(destino, reCopiar);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        //AQUI INSERT LOG ACTUAL
+                        WorkerRole.EscribeLog("Error al intentar copiar el archivo:\n" + ex.Message
+                                            , EventLogEntryType.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                mensaje = ("Error al mover archivo desde "
+                //AQUI INSERT ERROR MOVER TRAMA LOG ACTUAL
+                WorkerRole.EscribeLog("Error al mover archivo desde "
                                     + "\n Origen [" + origen + "]"
                                     + "\n hasta destino [" + destino + "]"
-                                    + "\n - " + ex.Message);
+                                    + "\n - " + ex.Message, EventLogEntryType.Error);
             }
-            return mensaje;
+            return destino;
         }
         /// <summary>
         /// Devuelve un string sin diagonal inicial y con diagonal final con una estructura de carpetas por Año, Mes y Día con base a la fecha del sistema
@@ -585,14 +653,25 @@ namespace ServiceTramasMicros
                     respuesta = servicio.procesarIntegracion(request, "xxxxxxx");
                 }
                 return respuesta;
-
             }
-            catch (Exception ex)
+            #region Control Excepciones especificas
+            catch (TimeoutException exTime)
             {
-                respuesta.codigo = 500;
-                respuesta.mensaje = ex.Message;
+                string mensajeException = "TimeOut con Facto"
+                                        + "\nDetalle: " + exTime.Message;
+                respuesta.codigo = 300;//Codigo de error general
+                respuesta.mensaje = mensajeException;
                 return respuesta;
             }
+            catch (Exception exGeneral)
+            {
+                string innerEx = exGeneral.InnerException != null ? "-" + exGeneral.InnerException.Message : "";
+                string mensajeException = "Error general envío a Facto: " + exGeneral.Message + innerEx;
+                respuesta.codigo = 300;//Codigo de error general
+                respuesta.mensaje = mensajeException;
+                return respuesta;
+            }
+            #endregion
         }
         /// <summary>
         /// Convierte un archivo a Bytes
