@@ -27,12 +27,12 @@
   </config>
   <emisor>
     <RFC>OMS131023NU1</RFC>
-    <Identificador numero="100">1</Identificador>
+    <Identificador numero="1">9</Identificador>
     <Identificador numero="200">2</Identificador>
     <Identificador numero="300">3</Identificador>
   </emisor>
   <emisor>
-    <RFC>XMS131023NU1</RFC>
+    <RFC>XOMS131023NU1</RFC>
     <Identificador numero="101">1</Identificador>
     <Identificador numero="201">2</Identificador>
     <Identificador numero="301">3</Identificador>
