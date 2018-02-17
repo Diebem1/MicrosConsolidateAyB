@@ -33,7 +33,7 @@ namespace ServiceTramasMicros
                 }
                 catch (Exception ex)
                 {
-                    WorkerRole.EscribeLog("Error archivo Emisor.xml\n"
+                    Funciones.EscribeLog("Error archivo Emisor.xml\n"
                         + ex.Message
                         , System.Diagnostics.EventLogEntryType.Error);
                     //_shutdownEvent.Set();
@@ -52,7 +52,7 @@ namespace ServiceTramasMicros
                 }
                 catch (Exception ex)
                 {
-                    WorkerRole.EscribeLog("Error carpetas de control\n"
+                    Funciones.EscribeLog("Error carpetas de control\n"
                                         + ex.Message
                                         , System.Diagnostics.EventLogEntryType.Error);
                     return;
@@ -69,7 +69,7 @@ namespace ServiceTramasMicros
                 catch (Exception ex)
                 {
                     string msgEx = "Error al leer directorio tramas sucias: ";
-                    WorkerRole.EscribeLog(msgEx
+                    Funciones.EscribeLog(msgEx
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                     throw new Exception(msgEx);
@@ -82,7 +82,7 @@ namespace ServiceTramasMicros
                 catch (Exception ex)
                 {
                     string msgEx = "Error al leer lista de tramas sucias: ";
-                    WorkerRole.EscribeLog(msgEx
+                    Funciones.EscribeLog(msgEx
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                     throw new Exception(msgEx);
@@ -124,7 +124,7 @@ namespace ServiceTramasMicros
                 catch (Exception ex)
                 {
                     string msgEx = "Error al crear arbol de directorio para AnioMesDia actual [" + currentAnioMesDia + "]: ";
-                    WorkerRole.EscribeLog(msgEx
+                    Funciones.EscribeLog(msgEx
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                     throw new Exception(msgEx);
@@ -153,7 +153,7 @@ namespace ServiceTramasMicros
                     catch (Exception)
                     {
                         //Aqui log Insert Error al leer trama para convertir a String
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
                     try
@@ -164,15 +164,15 @@ namespace ServiceTramasMicros
                     catch (Exception)
                     {
                         //Aquí Log No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje
-                        WorkerRole.EscribeLog("No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje", EventLogEntryType.Error);
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
+                        Funciones.EscribeLog("No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje", EventLogEntryType.Error);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
                     if (currentMensaje.Ping.Length > 0 || currentMensaje.Version.Length > 0)
                     {
                         //AQUI LOG Insert Trama se mueve por ser Ping o Version
-                        WorkerRole.EscribeLog("Mover porque no es un Ticket", EventLogEntryType.Warning);
-                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
+                        Funciones.EscribeLog("Mover porque no es un Ticket", EventLogEntryType.Warning);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
 
@@ -192,9 +192,9 @@ namespace ServiceTramasMicros
                     catch (Exception ex)
                     {
                         //Aquí Log Insert No fue posible ProcesarDatos o Generar Layout| Se incluye StackTrace
-                        WorkerRole.EscribeLog("No fue posible Procesar Datos o Generar Layout. " + ex.Message
+                        Funciones.EscribeLog("No fue posible Procesar Datos o Generar Layout. " + ex.Message
                                               , EventLogEntryType.Error);
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
+                        string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
                     string idMicrosTrama = "";
@@ -209,8 +209,8 @@ namespace ServiceTramasMicros
 
                         if (String.IsNullOrEmpty(identificador))
                         {
-                            WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVCFullPath);//Se cambia la trama historica a DefinirRVC                                
-                            WorkerRole.EscribeLog("El id de la trama [" + idMicrosTrama + "]"
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVCFullPath);//Se cambia la trama historica a DefinirRVC                                
+                            Funciones.EscribeLog("El id de la trama [" + idMicrosTrama + "]"
                                               + " no fue localizado en el archivo de configuración; el TXT Trama Limpia o XML no será generado"
                                               , EventLogEntryType.Error);
                             continue;
@@ -218,13 +218,13 @@ namespace ServiceTramasMicros
 
                         string fullPathTramaLimpia = EscribirLayoutLimpio(currentLayout, emisorObject.rfc);
                         //AQUI LOG INSERT Trama Limpia Escrita con Nombre nombreTramaLimpia
-                        WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
+                        string fileNameFinal2 = MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
                         //AQUI LOG INSERT Trama Sucia se mueve a Historicos                        
                     }
                     catch (Exception)
                     {
                         //Aquí Log Insert No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio| Se incluye StackTrace
-                        string mensaje = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
+                        string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
                     #endregion
@@ -273,7 +273,7 @@ namespace ServiceTramasMicros
                 }
                 catch (Exception ex)
                 {
-                    WorkerRole.EscribeLog("Error al leer directorio tramas: "
+                    Funciones.EscribeLog("Error al leer directorio tramas: "
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                 }
@@ -292,7 +292,7 @@ namespace ServiceTramasMicros
                 }
                 catch (Exception ex)
                 {
-                    WorkerRole.EscribeLog("Error al leer lista de tramas: "
+                    Funciones.EscribeLog("Error al leer lista de tramas: "
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
                 }
@@ -315,7 +315,7 @@ namespace ServiceTramasMicros
                     if (Respuesta.codigo == 100)
                     {
                         #region Procesados
-                        MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon);
                         //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
                         continue;
                         #endregion
@@ -323,7 +323,7 @@ namespace ServiceTramasMicros
                     else if (Respuesta.codigo == 200)
                     {
                         #region Duplicados
-                        MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado);
                         //AQUÍ LOG INSERT Trama Duplicada; Indicar el nombre con el que se guardó
                         continue;
                         #endregion
@@ -336,7 +336,7 @@ namespace ServiceTramasMicros
                             || Respuesta.mensaje.ToUpper().Contains(("RFC Emisor").ToUpper())
                             )
                         {
-                            MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC);
                             //AQUÍ LOG INSERT Trama DefinirRVC
                             continue;
                         }
@@ -344,7 +344,7 @@ namespace ServiceTramasMicros
                         #region NoFacturable
                         else if (Respuesta.mensaje.ToUpper().Contains(("Cancelad").ToUpper()))//Se omite la 'a' intencionalmente
                         {
-                            MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable);
                             //AQUÍ LOG INSERT Trama No facturable
                             continue;
                         }
@@ -352,7 +352,7 @@ namespace ServiceTramasMicros
                         #region Error
                         else
                         {
-                            MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError);
                             //AQUÍ LOG INSERT Error
                             continue;
                         }
@@ -361,7 +361,7 @@ namespace ServiceTramasMicros
                     #region Error
                     else
                     {
-                        MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError);
                         //AQUÍ LOG INSERT Error
                         continue;
                     }
@@ -376,25 +376,25 @@ namespace ServiceTramasMicros
         /// </summary>
         /// <param name="sEvent"></param>
         /// <param name="tipoEvento"></param>
-        public static void EscribeLog(string sEvent, EventLogEntryType tipoEvento)
-        {
-            string sSource;
-            string sLog;
-            try
-            {
-                sSource = "ServiceTramasMicros";
-                sLog = "Application";
-                if (!EventLog.SourceExists(sSource))
-                    EventLog.CreateEventSource(sSource, sLog);
-                EventLog.WriteEntry(sSource, sEvent, tipoEvento);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("No se pudo escribir en el visor de eventos, se escribe aquí:\n"
-                    + "[" + sEvent + "]"
-                    + "{" + tipoEvento.ToString() + "}");
-            }
-        }
+        //public static void EscribeLog(string sEvent, EventLogEntryType tipoEvento)
+        //{
+        //    string sSource;
+        //    string sLog;
+        //    try
+        //    {
+        //        sSource = "ServiceTramasMicros";
+        //        sLog = "Application";
+        //        if (!EventLog.SourceExists(sSource))
+        //            EventLog.CreateEventSource(sSource, sLog);
+        //        EventLog.WriteEntry(sSource, sEvent, tipoEvento);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        Console.WriteLine("No se pudo escribir en el visor de eventos, se escribe aquí:\n"
+        //            + "[" + sEvent + "]"
+        //            + "{" + tipoEvento.ToString() + "}");
+        //    }
+        //}
         /// <summary>
         /// Valida las carpetas que Micros utilizará en el proceso; si no existen las crea
         /// </summary>
@@ -440,7 +440,7 @@ namespace ServiceTramasMicros
             }
             catch (Exception ex)
             {
-                WorkerRole.EscribeLog("Error al crear carpetas de control: "
+                Funciones.EscribeLog("Error al crear carpetas de control: "
                             + ex.Message
                             , System.Diagnostics.EventLogEntryType.Error);
             }
@@ -498,11 +498,13 @@ namespace ServiceTramasMicros
                 }
                 else
                 {
+                    //AQUI LOG ERROR
                     throw new Exception("El objeto Layout fue Nulo");
                 }
             }
             catch (Exception ex)
             {
+                //AQUI LOG
                 string bodyMail = "Se ha generado un error al construir la trama,  con fecha " +
                                    DateTime.Now.ToString() + @"Detalle del error" +
                                    @"El error es:" +
@@ -541,7 +543,7 @@ namespace ServiceTramasMicros
                     catch (Exception ex)
                     {
                         //AQUI INSERT LOG ACTUAL
-                        WorkerRole.EscribeLog("Error al intentar copiar el archivo:\n" + ex.Message
+                        Funciones.EscribeLog("Error al intentar copiar el archivo:\n" + ex.Message
                                             , EventLogEntryType.Warning);
                     }
                 }
@@ -549,7 +551,7 @@ namespace ServiceTramasMicros
             catch (Exception ex)
             {
                 //AQUI INSERT ERROR MOVER TRAMA LOG ACTUAL
-                WorkerRole.EscribeLog("Error al mover archivo desde "
+                Funciones.EscribeLog("Error al mover archivo desde "
                                     + "\n Origen [" + origen + "]"
                                     + "\n hasta destino [" + destino + "]"
                                     + "\n - " + ex.Message, EventLogEntryType.Error);
@@ -580,8 +582,9 @@ namespace ServiceTramasMicros
                 throw new Exception(ex.Message);
             }
         }
-        private void GenerarXml(DocumentXml.DocumentoFiscalv11.documentoFiscal documento)
+        private string GenerarXml(DocumentXml.DocumentoFiscalv11.documentoFiscal documento)
         {
+            string fileName = "";
             try
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(DocumentXml.DocumentoFiscalv11.documentoFiscal));
@@ -600,13 +603,15 @@ namespace ServiceTramasMicros
                 {
                     prefijo += DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_";
                 }
-
-                objXmlFile = new StreamWriter(cfn.XmlFolder + prefijo + documento.numeroTransaccion + ".xml");
+                fileName = cfn.XmlFolder + prefijo + documento.numeroTransaccion + ".xml";
+                objXmlFile = new StreamWriter(fileName);
                 xmlSerializer.Serialize(objXmlFile, documento);
                 objXmlFile.Close();
+                return fileName;
             }
             catch (Exception ex)
             {
+                //AQUI LOG ERROR
                 throw new Exception("Error al crear el archivo XML [" + ex.Message + "]");
             }
         }
