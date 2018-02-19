@@ -35,6 +35,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,6 +55,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ReadElements.cs" />
+    <Compile Include="Service References\LogMicros\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -97,6 +104,25 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Service References\LogMicros\Service1.wsdl" />
+    <None Include="Service References\LogMicros\Service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogMicros\Service11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogMicros\Service12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogMicros\Service13.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogMicros\Service14.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\LogMicros\ServiceTramasMicros.LogMicros.CompositeType.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Web References\Facto\endPointCfdiResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -126,6 +152,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Service References\LogMicros\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\LogMicros\configuration.svcinfo" />
+    <None Include="Service References\LogMicros\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Contexto\ServiceTramasMicros.Model.csproj">
@@ -137,7 +169,9 @@
       <Name>ServiceTramasMicros.Entidades</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\LogMicros\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

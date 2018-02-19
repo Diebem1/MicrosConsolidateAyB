@@ -27,8 +27,6 @@ namespace ServiceTramasMicros.Model
         {
             try
             {
-                if (File.Exists(fullFileNamePath))
-                { }
                 using (StreamWriter w = File.AppendText(fullFileNamePath))
                 {
                     Log(logMessage, w);
@@ -54,7 +52,7 @@ namespace ServiceTramasMicros.Model
             {
                 txtWriter.Write("\r\nLog Entry : ");
                 txtWriter.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
-                    DateTime.Now.ToLongDateString());
+                                    DateTime.Now.ToLongDateString());
                 txtWriter.WriteLine("  :");
                 txtWriter.WriteLine("  :{0}", logMessage);
                 txtWriter.WriteLine("-------------------------------");

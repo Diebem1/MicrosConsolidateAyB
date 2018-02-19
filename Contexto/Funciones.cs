@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -22,9 +23,18 @@ namespace ServiceTramasMicros.Model
             }
             catch (Exception)
             {
-                //Console.WriteLine("No se pudo escribir en el visor de eventos, se escribe aquí:\n"
-                //    + "[" + sEvent + "]"
-                //    + "{" + tipoEvento.ToString() + "}");
+            }
+
+            try
+            {
+                string carpetaLogs = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + @"\Logs\";
+                if (!Directory.Exists(carpetaLogs))
+                    Directory.CreateDirectory(carpetaLogs);
+
+                LogWriter logEventsObject = new LogWriter(sEvent, carpetaLogs + "LogEvent" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+            }
+            catch (Exception)
+            {
             }
         }
     }
