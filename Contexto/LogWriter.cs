@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceTramasMicros.Entidades;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace ServiceTramasMicros.Model
             {
                 using (StreamWriter w = File.AppendText(fullFileNamePath))
                 {
-                    Log(logMessage, w);
+                    Log(logMessage, w, type);
                     if (type == EnumTipoError.Err || type == EnumTipoError.ErrTry)
                         SendLogToCloud(logMessage, type);
                 }
@@ -68,15 +69,15 @@ namespace ServiceTramasMicros.Model
         /// </summary>
         /// <param name="logMessage">Mensaje</param>
         /// <param name="txtWriter">TextWriter para escribir en el archivo Log</param>
-        private void Log(string logMessage, TextWriter txtWriter)
+        private void Log(string logMessage, TextWriter txtWriter, EnumTipoError type)
         {
             try
             {
                 txtWriter.Write("\r\nLog Entry : ");
                 txtWriter.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
                                     DateTime.Now.ToLongDateString());
-                //txtWriter.WriteLine("  :");
-                txtWriter.WriteLine("  :{0}", logMessage);
+                txtWriter.WriteLine("Type    :{0}", type.ToString());
+                txtWriter.WriteLine("Detail  :{0}", logMessage);
                 txtWriter.WriteLine("-------------------------------");
             }
             catch (Exception ex)
@@ -103,8 +104,52 @@ namespace ServiceTramasMicros.Model
                                     , this.referencia_CI_CC);
             }
             catch (Exception)
-            {                
+            {
             }
+        }
+        /// <summary>
+        /// Envia información a la nube, de la trama
+        /// </summary>
+        /// <param name="fileNameTrama">Ruta completa del archivo</param>
+        /// <param name="layout">Objeto Layout; si las tramas provienen de una versión reciente de Micros</param>
+        /// <param name="xmlString">El texto del contenido del XML; si las tramas provienen de una versión Micros donde se requería un Doc. Fiscal de por medio para llegar a Facto</param>
+        public void SendTramaToCloud(string fileNameTrama, Layout layout, string xmlString)
+        {
+            this.LogWrite("Se intentará enviar trama a la nube", EnumTipoError.Informative);
+            try
+            {
+                WSLogMicros.Service1Client clienteTramaWS = new WSLogMicros.Service1Client();
+                WSLogMicros.EnviarLogTrama infoTramaWS = null;
+                #region llenar Layout del WS si aplica
+                if (layout != null)
+                {
+                    infoTramaWS = new WSLogMicros.EnviarLogTrama();
+                    infoTramaWS.ltsTender = layout.ltsTender.ToArray();
+                    infoTramaWS.ltsPayment = layout.ltsPayment.ToArray();
+                    infoTramaWS.ltsMenu = layout.ltsMenu.ToArray();
+                    infoTramaWS.ltsDiscount = layout.ltsDiscount.ToArray();
+                    infoTramaWS.ltsServicesCharges = layout.ltsServicesCharges.ToArray();
+                    infoTramaWS.ltsImpuestos = layout.ltsImpuestos.ToArray();
+                    infoTramaWS.nombreArchivo = layout.nombreArchivo;
+                }
+                #endregion
+                clienteTramaWS.InsertarTrama(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
+            }
+            #region Control Excepciones especificas
+            catch (TimeoutException exTime)
+            {
+                string mensajeException = "TimeOut con Servicio Tramas, método 'InsertarTrama'"
+                                        + "; Detalle: " + exTime.Message;
+
+                this.LogWrite("Warning en envío trama a la nube: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+            }
+            catch (Exception exGeneral)
+            {
+                string innerEx = exGeneral.InnerException != null ? "-" + exGeneral.InnerException.Message : "";
+                string mensajeException = "Error general con Servicio Tramas, método 'InsertarTrama': " + exGeneral.Message + innerEx;
+                this.LogWrite("Warning en envío trama a la nube: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+            }
+            #endregion
         }
     }
 }

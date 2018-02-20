@@ -133,7 +133,7 @@ namespace ServiceTramasMicros
                 logEspecificoDia.LogWrite("Leer Directorio Tramas Sucias", LogWriter.EnumTipoError.Informative);
                 try
                 {
-                    tramasSuciasFolder = new DirectoryInfo(cfn.TramasSuciasFolder);                    
+                    tramasSuciasFolder = new DirectoryInfo(cfn.TramasSuciasFolder);
                 }
                 catch (Exception ex)
                 {
@@ -178,7 +178,7 @@ namespace ServiceTramasMicros
                     {
                         cadenaTramaBruta = File.ReadAllText(tramaTargetFile.FullName);
                         //AQUI LOG Insert Trama Sucia Leída Correctamente
-                        logObjectTrama.LogWrite("Insert Trama Sucia Leída Correctamente", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("Trama Sucia Leída Correctamente", LogWriter.EnumTipoError.Informative);
                     }
                     catch (Exception)
                     {
@@ -262,7 +262,7 @@ namespace ServiceTramasMicros
 
                         string fullPathTramaLimpia = EscribirLayoutLimpio(currentLayout, emisorObject.rfc);
                         //AQUI LOG INSERT Trama Limpia Escrita con Nombre nombreTramaLimpia
-                        logObjectTrama.LogWrite("Trama Limpia Escrita con Nombre [" + fullPathTramaLimpia + "]", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("Trama Limpia escrita en ruta [" + fullPathTramaLimpia + "]", LogWriter.EnumTipoError.Informative);
                         string fileNameFinal2 = MoverArchivo(tramaTargetFile.FullName, currentTramaHistoricaFullPath);
                         //AQUI LOG INSERT Trama Sucia se mueve a Historicos
                         logObjectTrama.LogWrite("Trama Sucia se mueve a Historicos [" + fileNameFinal2 + "]", LogWriter.EnumTipoError.Informative);
@@ -270,7 +270,8 @@ namespace ServiceTramasMicros
                     catch (Exception ex)
                     {
                         //Aquí Log Insert No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio| Se incluye StackTrace
-                        logObjectTrama.LogWrite("Error: No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio\nSe incluye Detalle y StackTrace: "
+                        logObjectTrama.LogWrite("Error: No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio;"
+                                              + " Se incluye Detalle y StackTrace: "
                                                  + ex.Message + "-" + ex.StackTrace, LogWriter.EnumTipoError.ErrTry);
                         string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
@@ -383,9 +384,10 @@ namespace ServiceTramasMicros
                     {
                         logObjectTrama.LogWrite("La respuesta fue 100 Exito", LogWriter.EnumTipoError.Informative);
                         #region Procesados
-                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon, logObjectTrama);
                         //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Informative);
+                        EnviarTramaANube(fileNameFinal, logObjectTrama);
                         continue;
                         #endregion
                     }
@@ -393,7 +395,7 @@ namespace ServiceTramasMicros
                     {
                         #region Duplicados
                         logObjectTrama.LogWrite("La respuesta fue 200 Duplicado", LogWriter.EnumTipoError.Err);
-                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado, "", logObjectTrama);
                         //AQUÍ LOG INSERT Trama Duplicada; Indicar el nombre con el que se guardó
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                         continue;
@@ -408,7 +410,7 @@ namespace ServiceTramasMicros
                             || Respuesta.mensaje.ToUpper().Contains(("RFC Emisor").ToUpper())
                             )
                         {
-                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC, "", logObjectTrama);
                             //AQUÍ LOG INSERT Trama DefinirRVC
                             logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
@@ -417,7 +419,7 @@ namespace ServiceTramasMicros
                         #region NoFacturable
                         else if (Respuesta.mensaje.ToUpper().Contains(("Cancelad").ToUpper()))//Se omite la 'a' intencionalmente
                         {
-                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable, "", logObjectTrama);
                             //AQUÍ LOG INSERT Trama No facturable
                             logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
@@ -426,7 +428,7 @@ namespace ServiceTramasMicros
                         #region Error
                         else
                         {
-                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                            string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError, "", logObjectTrama);
                             //AQUÍ LOG INSERT Error
                             logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
@@ -436,7 +438,7 @@ namespace ServiceTramasMicros
                     #region Error
                     else
                     {
-                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaError, "", logObjectTrama);
                         //AQUÍ LOG INSERT Error
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                         continue;
@@ -600,7 +602,7 @@ namespace ServiceTramasMicros
         /// <param name="destino">Ruta completa del destino del archivo</param>
         /// <param name="reCopiar">Ruta completa del archivo donde será copiado después de moverlo al destino</param>
         /// <returns>Regresa el nombre de archivo completo en destino</returns>
-        public static string MoverArchivo(string origen, string destino, string reCopiar = "")
+        public static string MoverArchivo(string origen, string destino, string reCopiar = "", LogWriter logInclude = null)
         {
             try
             {
@@ -612,29 +614,41 @@ namespace ServiceTramasMicros
                               .Replace(extension, "-" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + extension);
                 }
 
+                if (logInclude != null)
+                    logInclude.LogWrite("Se intentará mover archivo origen [" + origen + "]", LogWriter.EnumTipoError.Informative);
+
                 File.Move(origen, destino);
-                //AQUI INSERT LOG TRAMA SE MUEVE
+
+                if (logInclude != null)
+                    logInclude.LogWrite("El archivo se movió al destino [" + destino + "]", LogWriter.EnumTipoError.Informative);
+
                 if (reCopiar != "")
                 {
+                    if (logInclude != null)
+                        logInclude.LogWrite("La configuración indica clonar la trama a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Informative);
+
                     try
                     {
                         File.Copy(destino, reCopiar);
+
+                        if (logInclude != null)
+                            logInclude.LogWrite("La trama fue clonada a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Informative);
                     }
                     catch (Exception ex)
                     {
-                        //AQUI INSERT LOG ACTUAL
-                        Funciones.EscribeLog("Error al intentar copiar el archivo:\n" + ex.Message
-                                            , EventLogEntryType.Warning);
+                        if (logInclude != null)
+                            logInclude.LogWrite("Error al intentar copiar el archivo:\n" + ex.Message
+                                                , LogWriter.EnumTipoError.ErrTry);
                     }
                 }
             }
             catch (Exception ex)
             {
-                //AQUI INSERT ERROR MOVER TRAMA LOG ACTUAL
-                Funciones.EscribeLog("Error al mover archivo desde "
-                                    + "\n Origen [" + origen + "]"
-                                    + "\n hasta destino [" + destino + "]"
-                                    + "\n - " + ex.Message, EventLogEntryType.Error);
+                if (logInclude != null)
+                    logInclude.LogWrite("Error al mover archivo desde "
+                                        + "\n Origen [" + origen + "]"
+                                        + "\n hasta destino [" + destino + "]"
+                                        + "\n - " + ex.Message, LogWriter.EnumTipoError.ErrTry);
             }
             return destino;
         }
@@ -874,6 +888,32 @@ namespace ServiceTramasMicros
             }
 
             return referencia;
+        }
+        private void EnviarTramaANube(string fileName, LogWriter logTramaTarget)
+        {
+            #region Enviar trama a la nube
+            try
+            {
+                if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
+                {
+                    string xmlTargetString = File.ReadAllText(fileName);
+                    logTramaTarget.LogWrite("Se enviará el contenido XML a la nube", LogWriter.EnumTipoError.Informative);
+                    logTramaTarget.SendTramaToCloud(fileName, null, xmlTargetString);
+                }
+                else
+                {
+                    ProcesaCadena procesar = new ProcesaCadena();
+                    Layout layoutTarget = procesar.GeneraLayoutFromTramaLimpia(fileName);
+                    logTramaTarget.LogWrite("Se enviará objeto Layout (trama) a la nube", LogWriter.EnumTipoError.Informative);
+                    logTramaTarget.SendTramaToCloud(fileName, layoutTarget, "");
+                }
+            }
+            catch (Exception)
+            {
+                logTramaTarget.LogWrite("Error al preparar archivos para enviar trama a la nube con ruta [" + fileName + "]"
+                                        , LogWriter.EnumTipoError.ErrTry);
+            }
+            #endregion
         }
     }
 }

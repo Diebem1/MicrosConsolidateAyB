@@ -25,7 +25,7 @@
     <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
     <FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
     <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
-    <ClonarTrama></ClonarTrama>
+    <ClonarTrama>C:\Clones de Tramas</ClonarTrama>
   </config>
   <emisor>
     <RFC>HHO900507844</RFC>
