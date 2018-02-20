@@ -43,6 +43,7 @@
         <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ServicioMicros" minOccurs="0" name="trama" nillable="true" type="q1:EnviarLog.Trama" />
         <xs:element minOccurs="0" name="recordDate" type="xs:dateTime" />
         <xs:element minOccurs="0" name="referencia_CI_CC" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="tramaXML" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceTramasMicros.LogMicros {
+namespace ServiceTramasMicros.Model.WSLogMicros {
     using System.Runtime.Serialization;
     using System;
     
@@ -216,7 +216,7 @@ namespace ServiceTramasMicros.LogMicros {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="LogMicros.IService1")]
+    [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WSLogMicros.IService1")]
     public interface IService1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetData", ReplyAction="http://tempuri.org/IService1/GetDataResponse")]
@@ -226,19 +226,19 @@ namespace ServiceTramasMicros.LogMicros {
         void InsertarLog(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertarTrama", ReplyAction="http://tempuri.org/IService1/InsertarTramaResponse")]
-        void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.LogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC);
+        void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IService1/GetDataUsingDataContractResponse")]
-        ServiceTramasMicros.LogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.LogMicros.CompositeType composite);
+        ServiceTramasMicros.Model.WSLogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IService1Channel : ServiceTramasMicros.LogMicros.IService1, System.ServiceModel.IClientChannel {
+    public interface IService1Channel : ServiceTramasMicros.Model.WSLogMicros.IService1, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class Service1Client : System.ServiceModel.ClientBase<ServiceTramasMicros.LogMicros.IService1>, ServiceTramasMicros.LogMicros.IService1 {
+    public partial class Service1Client : System.ServiceModel.ClientBase<ServiceTramasMicros.Model.WSLogMicros.IService1>, ServiceTramasMicros.Model.WSLogMicros.IService1 {
         
         public Service1Client() {
         }
@@ -267,11 +267,11 @@ namespace ServiceTramasMicros.LogMicros {
             base.Channel.InsertarLog(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC);
         }
         
-        public void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.LogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC) {
-            base.Channel.InsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC);
+        public void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML) {
+            base.Channel.InsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML);
         }
         
-        public ServiceTramasMicros.LogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.LogMicros.CompositeType composite) {
+        public ServiceTramasMicros.Model.WSLogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite) {
             return base.Channel.GetDataUsingDataContract(composite);
         }
     }

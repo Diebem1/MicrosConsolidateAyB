@@ -84,5 +84,13 @@ namespace ServiceTramasMicros.Entidades
         /// ; ya incluye al final del string la diagonal \
         /// </summary>
         public string DefinirRVCFolder { get { return this.FolderRoot + @"DefinirRVC\"; } }
+        /// <summary>
+        /// Clave facto, utilizado para WS de Logs; Es requerido
+        /// </summary>
+        public string ClaveFacto { get; set; }
+        /// <summary>
+        /// Centro de consumo, utilizado para WS de Logs; Es requerido
+        /// </summary>
+        public string CentroConsumo { get; set; }
     }
 }

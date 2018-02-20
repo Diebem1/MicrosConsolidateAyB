@@ -11,6 +11,8 @@
     <TituloMail>Insidente Micros</TituloMail>
     <MailSoporte></MailSoporte>
     <Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
+    <ClaveFacto>CFACTO</ClaveFacto>
+    <CentroConsumo>CCTEST</CentroConsumo>
     <Version>Next- Technologies Micros 3700</Version>
     <Llave>xxxxxxx</Llave>
     <LocalIp>127.0.0.1</LocalIp>
@@ -21,7 +23,7 @@
     <!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
     <TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
     <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
-    <FactoVersion>VERSION_33</FactoVersion>
+    <FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
     <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
     <ClonarTrama></ClonarTrama>
   </config>

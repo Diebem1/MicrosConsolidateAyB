@@ -31,7 +31,9 @@ namespace ServiceTramasMicros.Model
                 if (!Directory.Exists(carpetaLogs))
                     Directory.CreateDirectory(carpetaLogs);
 
-                LogWriter logEventsObject = new LogWriter(sEvent, carpetaLogs + "LogEvent" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt");
+                string carpetaLogEvent = carpetaLogs + "LogEvent" + DateTime.Now.ToString("yyyy-MM-dd") + "_log.txt";
+                LogWriter logEventsObject = new LogWriter(sEvent, carpetaLogEvent
+                                                        , "NA", "NA", carpetaLogEvent, "NA");
             }
             catch (Exception)
             {
