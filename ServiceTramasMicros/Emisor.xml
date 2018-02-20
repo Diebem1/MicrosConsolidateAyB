@@ -3,7 +3,7 @@
   <config>
     <Puerto>6000</Puerto>
     <!--Ruta raíz para todas las carpetas de control de este servicio-->
-    <Folder>C:\Micros\Facto\</Folder>
+    <Folder>C:\MicrosA\Facto\</Folder>
     <MailNotificacion>soportenextech@gmail.com</MailNotificacion>
     <PasswordMailNotificacion>!m3s4d34yud4</PasswordMailNotificacion>
     <HostMail>smtp.gmail.com</HostMail>
@@ -11,26 +11,26 @@
     <TituloMail>Insidente Micros</TituloMail>
     <MailSoporte></MailSoporte>
     <Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
-    <ClaveFacto>CFACTO</ClaveFacto>
-    <CentroConsumo>CCTEST</CentroConsumo>
+    <ClaveFacto>CFACTOA</ClaveFacto>
+    <CentroConsumo>CCTESTA</CentroConsumo>
     <Version>Next- Technologies Micros 3700</Version>
     <Llave>xxxxxxx</Llave>
     <LocalIp>127.0.0.1</LocalIp>
     <!--Ruta completa donde se depositan tramas limpias, para posteriormente procesarlas-->
-    <Tramas>C:\Micros\Facto\Tramas</Tramas>
+    <Tramas>C:\MicrosA\Facto\Tramas</Tramas>
     <!--Ruta completa donde este cliente debe recuperar tramas sucias generadas por el Socket-->
-    <TramasSucias>C:\Micros\Facto\TramasSucias</TramasSucias>
+    <TramasSucias>C:\MicrosA\Facto\TramasSucias</TramasSucias>
     <!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
-    <TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
+    <TramasHistoricas>C:\MicrosA\Facto\TramasHistoricas</TramasHistoricas>
     <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
-    <FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
+    <FactoVersion>VERSION_33</FactoVersion>
     <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
-    <ClonarTrama>C:\Clones de Tramas</ClonarTrama>
+    <ClonarTrama>C:\Clones de TramasA</ClonarTrama>
   </config>
   <emisor>
     <RFC>HHO900507844</RFC>
     <Identificador numero="1">53</Identificador>
-    <Identificador numero="200">2</Identificador>
+    <Identificador numero="122">53</Identificador>
     <Identificador numero="300">3</Identificador>
   </emisor>
   <emisor>

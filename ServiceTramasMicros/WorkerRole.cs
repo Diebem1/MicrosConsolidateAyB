@@ -374,8 +374,11 @@ namespace ServiceTramasMicros
                     #endregion
                     //AQUI LOG Debe Crearse para la trama Actual
                     string currentTramaLogFullPath = fullPathLogs + Path.GetFileNameWithoutExtension(tramaTargetFile.FullName) + "_log.txt";
+                    string referenciaToCloud_CI_CC = referenciaGetReferencia(Path.GetFileNameWithoutExtension(tramaTargetFile.FullName))
+                                                   + "_" + cfn.ClaveFacto + "_" + cfn.CentroConsumo;
                     LogWriter logObjectTrama = new LogWriter("Se crea log para trama con nombre de archivo [" + currentNombreArchivo + "]", currentTramaLogFullPath
-                                                            , cfn.ClaveFacto, cfn.CentroConsumo, currentNombreArchivo, Path.GetFileNameWithoutExtension(tramaTargetFile.FullName));
+                                                            , cfn.ClaveFacto, cfn.CentroConsumo, currentNombreArchivo
+                                                            , referenciaToCloud_CI_CC);
 
                     Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
                     logObjectTrama.LogWrite("Se enviará a Facto", LogWriter.EnumTipoError.Informative);
@@ -827,8 +830,10 @@ namespace ServiceTramasMicros
                 emisor.rfc = emisorRfcNodo.Value;
                 emisor.mapeoIDsList.Add("X", sucursalNumeroNodo.Value);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string msgEx = ex.Message + (ex.InnerException != null ? "-" + ex.InnerException.Message : "");
+                throw new Exception("No fue posible recuperar datos de emisor en método 'GetEmisorFromXMLTrama'; Detalles: " + msgEx);
             }
             return emisor;
         }
@@ -849,16 +854,18 @@ namespace ServiceTramasMicros
                 if (primerTrama.StartsWith("T"))
                 {
                     idMicrosTrama = primerTrama.Split('|')[5].Trim();//Id Micros en la trama
-                    emisor = emisorCfnList.Where(x => x.mapeoIDsList.TryGetValue(idMicrosTrama, out identificador)).FirstOrDefault();
+                    var emisorConfig = emisorCfnList.Where(x => x.mapeoIDsList.TryGetValue(idMicrosTrama, out identificador)).FirstOrDefault();
                     if (!String.IsNullOrEmpty(identificador))
                     {
-                        emisor.mapeoIDsList.Clear();
+                        emisor.rfc = emisorConfig.rfc;
                         emisor.mapeoIDsList.Add("X", identificador);
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string msgEx = ex.Message + (ex.InnerException != null ? "-" + ex.InnerException.Message : "");
+                throw new Exception("No fue posible recuperar datos de emisor en método 'GetEmisorFromTXTTrama'; Detalles: " + msgEx);
             }
             return emisor;
         }
@@ -872,19 +879,26 @@ namespace ServiceTramasMicros
         private string referenciaGetReferencia(string nombreArchivo)
         {
             string referencia = string.Empty;
-
-            if (!string.IsNullOrEmpty(nombreArchivo))
+            try
             {
-                var split = nombreArchivo.Split('-');
+                if (!string.IsNullOrEmpty(nombreArchivo))
+                {
+                    var split = nombreArchivo.Split('-');
 
-                if (split.Length > 1)
-                {
-                    referencia = split[split.Length - 1].Split('_').Length > 1 ? split[split.Length - 1].Split('_')[split[split.Length - 1].Split('_').Length - 1] : split[1];
+                    if (split.Length > 1)
+                    {
+                        referencia = split[split.Length - 1].Split('_').Length > 1 ? split[split.Length - 1].Split('_')[split[split.Length - 1].Split('_').Length - 1] : split[1];
+                    }
+                    else
+                    {
+                        referencia = split[0].Split('_').Length > 1 ? split[0].Split('_')[split[0].Split('_').Length - 1] : split[0];
+                    }
                 }
-                else
-                {
-                    referencia = split[0].Split('_').Length > 1 ? split[0].Split('_')[split[0].Split('_').Length - 1] : split[0];
-                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
             return referencia;
