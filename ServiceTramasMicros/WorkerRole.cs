@@ -383,9 +383,10 @@ namespace ServiceTramasMicros
                     Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
                     logObjectTrama.LogWrite("Se enviará a Facto", LogWriter.EnumTipoError.Informative);
                     Respuesta = EnviarDatosFacto(tramaTargetFile.FullName, logObjectTrama);
+                    string mensajeFacto = (Respuesta != null && Respuesta.mensaje != null ? Respuesta.mensaje : "");
                     if (Respuesta.codigo == 100)
                     {
-                        logObjectTrama.LogWrite("La respuesta fue 100 Exito", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("La respuesta fue 100 Exito: " + mensajeFacto, LogWriter.EnumTipoError.Informative);
                         #region Procesados
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon, logObjectTrama);
                         //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
@@ -397,7 +398,7 @@ namespace ServiceTramasMicros
                     else if (Respuesta.codigo == 200)
                     {
                         #region Duplicados
-                        logObjectTrama.LogWrite("La respuesta fue 200 Duplicado", LogWriter.EnumTipoError.Err);
+                        logObjectTrama.LogWrite("La respuesta fue 200 Duplicado: " + mensajeFacto, LogWriter.EnumTipoError.Err);
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado, "", logObjectTrama);
                         //AQUÍ LOG INSERT Trama Duplicada; Indicar el nombre con el que se guardó
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
@@ -406,7 +407,7 @@ namespace ServiceTramasMicros
                     }
                     else if (!String.IsNullOrEmpty(Respuesta.mensaje))
                     {
-                        logObjectTrama.LogWrite("La respuesta fue 300 Error", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("La respuesta fue 300 Error: " + mensajeFacto, LogWriter.EnumTipoError.Err);
                         #region DefinirRVC
                         if (Respuesta.mensaje.ToUpper().Contains(("No se encontró un Identificador").ToUpper())
                             || Respuesta.mensaje.ToUpper().Contains(("RVC").ToUpper())
@@ -415,7 +416,7 @@ namespace ServiceTramasMicros
                         {
                             string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVC, "", logObjectTrama);
                             //AQUÍ LOG INSERT Trama DefinirRVC
-                            logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
+                            logObjectTrama.LogWrite("DefinirRVC: Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
                         }
                         #endregion
@@ -424,7 +425,7 @@ namespace ServiceTramasMicros
                         {
                             string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaNoFacturable, "", logObjectTrama);
                             //AQUÍ LOG INSERT Trama No facturable
-                            logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
+                            logObjectTrama.LogWrite("NoFacturable: Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
                         }
                         #endregion

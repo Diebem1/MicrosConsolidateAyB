@@ -13,19 +13,19 @@ namespace ServiceTramasMicros
         /// </summary>
         static void Main()
         {
-#if (!DEBUG)
+//#if (!DEBUG)
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new Service1() 
+                new ServicioTramasMicros() 
             };
             ServiceBase.Run(ServicesToRun);
-#else
-            //Debug
-            Service1 servicio = new Service1();
-            servicio.Process();
-            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
-#endif
+//#else
+//            //Debug
+//            Service1 servicio = new Service1();
+//            servicio.Process();
+//            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+//#endif
         }
     }
 }

@@ -10,10 +10,10 @@ using System.Threading;
 
 namespace ServiceTramasMicros
 {
-    public partial class Service1 : ServiceBase
+    public partial class ServicioTramasMicros : ServiceBase
     {
         WorkerRole workerRole = new WorkerRole();
-        public Service1()
+        public ServicioTramasMicros()
         {
             InitializeComponent();
         }
