@@ -16,12 +16,14 @@ namespace ServiceTramasMicros.Model
         //private string errorTry = string.Empty;
         //private string error = string.Empty;
         private string referencia_CI_CC = string.Empty;
+        private bool allLogsEnabled = false;
         public enum EnumTipoError
         {
             Err = 0,
             ErrTry = 1,
             Warning = 3,
-            Informative = 4
+            Informative = 4,
+            Important = 5
         }
 
         /// <summary>
@@ -38,6 +40,18 @@ namespace ServiceTramasMicros.Model
             this.centroConsumo = centroConsumo;
             this.nombreFile = nombreFile;
             this.referencia_CI_CC = referencia_CI_CC;
+
+            try
+            {
+                string configLogsEnabled = System.Configuration.ConfigurationSettings
+                                           .AppSettings["AllLogsEnabled"].ToString();
+                allLogsEnabled = (configLogsEnabled == "1" ? true : false);
+            }
+            catch (Exception)
+            {
+                allLogsEnabled = false;
+            }
+
             LogWrite(logMessage, EnumTipoError.Informative);
         }
         /// <summary>
@@ -46,6 +60,8 @@ namespace ServiceTramasMicros.Model
         /// <param name="logMessage">Mensaje</param>
         public void LogWrite(string logMessage, EnumTipoError type)
         {
+            if (type == EnumTipoError.Informative && !this.allLogsEnabled)
+                return;
             try
             {
                 using (StreamWriter w = File.AppendText(fullFileNamePath))
@@ -115,7 +131,7 @@ namespace ServiceTramasMicros.Model
         /// <param name="xmlString">El texto del contenido del XML; si las tramas provienen de una versión Micros donde se requería un Doc. Fiscal de por medio para llegar a Facto</param>
         public void SendTramaToCloud(string fileNameTrama, Layout layout, string xmlString)
         {
-            this.LogWrite("Se intentará enviar trama a la nube", EnumTipoError.Informative);
+            this.LogWrite("Se intentará enviar trama a la nube", EnumTipoError.Important);
             try
             {
                 WSLogMicros.Service1Client clienteTramaWS = new WSLogMicros.Service1Client();
@@ -134,6 +150,7 @@ namespace ServiceTramasMicros.Model
                 }
                 #endregion
                 clienteTramaWS.InsertarTrama(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
+                this.LogWrite("Trama enviado a la nube", EnumTipoError.Important);
             }
             #region Control Excepciones especificas
             catch (TimeoutException exTime)

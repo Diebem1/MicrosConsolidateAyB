@@ -1,42 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Configuracion>
-  <config>
-    <Puerto>6000</Puerto>
-    <!--Ruta raíz para todas las carpetas de control de este servicio-->
-    <Folder>C:\MicrosA\Facto\</Folder>
-    <MailNotificacion>soportenextech@gmail.com</MailNotificacion>
-    <PasswordMailNotificacion>!m3s4d34yud4</PasswordMailNotificacion>
-    <HostMail>smtp.gmail.com</HostMail>
-    <PuertoMail>587</PuertoMail>
-    <TituloMail>Insidente Micros</TituloMail>
-    <MailSoporte></MailSoporte>
-    <Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
-    <ClaveFacto>CFACTOA</ClaveFacto>
-    <CentroConsumo>CCTESTA</CentroConsumo>
-    <Version>Next- Technologies Micros 3700</Version>
-    <Llave>xxxxxxx</Llave>
-    <LocalIp>127.0.0.1</LocalIp>
-    <!--Ruta completa donde se depositan tramas limpias, para posteriormente procesarlas-->
-    <Tramas>C:\MicrosA\Facto\Tramas</Tramas>
-    <!--Ruta completa donde este cliente debe recuperar tramas sucias generadas por el Socket-->
-    <TramasSucias>C:\MicrosA\Facto\TramasSucias</TramasSucias>
-    <!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
-    <TramasHistoricas>C:\MicrosA\Facto\TramasHistoricas</TramasHistoricas>
-    <!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
-    <FactoVersion>VERSION_33</FactoVersion>
-    <!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
-    <ClonarTrama>C:\Clones de TramasA</ClonarTrama>
-  </config>
-  <emisor>
-    <RFC>HHO900507844</RFC>
-    <Identificador numero="1">53</Identificador>
-    <Identificador numero="122">53</Identificador>
-    <Identificador numero="300">3</Identificador>
-  </emisor>
-  <emisor>
-    <RFC>XOMS131023NU1</RFC>
-    <Identificador numero="101">1</Identificador>
-    <Identificador numero="201">2</Identificador>
-    <Identificador numero="301">3</Identificador>
-  </emisor>
+	<config>
+		<Puerto>6000</Puerto>
+		<!--Ruta raíz para todas las carpetas de control de este servicio-->
+		<Folder>C:\Micros\Facto\</Folder>
+		<MailNotificacion>soportenextech@gmail.com</MailNotificacion>
+		<PasswordMailNotificacion>!m3s4d34yud4</PasswordMailNotificacion>
+		<HostMail>smtp.gmail.com</HostMail>
+		<PuertoMail>587</PuertoMail>
+		<TituloMail>Insidente Micros</TituloMail>
+		<MailSoporte/>
+		<Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
+		<ClaveFacto>CFACTOA</ClaveFacto>
+		<CentroConsumo>CCTESTA</CentroConsumo>
+		<Version>Next- Technologies Micros 3700</Version>
+		<Llave>xxxxxxx</Llave>
+		<LocalIp>127.0.0.1</LocalIp>
+		<!--Ruta completa donde se depositan tramas limpias, para posteriormente procesarlas-->
+		<Tramas>C:\Micros\Facto\Tramas</Tramas>
+		<!--Ruta completa donde este cliente debe recuperar tramas sucias generadas por el Socket-->
+		<TramasSucias>C:\Micros\Facto\TramasSucias</TramasSucias>
+		<!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
+		<TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
+		<!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
+		<FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
+		<!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
+		<ClonarTrama>C:\Clones de Tramas</ClonarTrama>
+	</config>
+	<emisor>
+		<RFC>HHO900507844</RFC>
+		<Identificador numero="1">53</Identificador>
+		<Identificador numero="122">53</Identificador>
+		<Identificador numero="300">3</Identificador>
+	</emisor>
+	<emisor>
+		<RFC>XOMS131023NU1</RFC>
+		<Identificador numero="101">1</Identificador>
+		<Identificador numero="201">2</Identificador>
+		<Identificador numero="301">3</Identificador>
+	</emisor>
 </Configuracion>

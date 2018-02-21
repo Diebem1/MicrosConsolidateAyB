@@ -52,13 +52,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E6167A1F7616484A9963C8C4CEFB62DE"
+        "OwnerKey" = "8:_D6308BADF9D6E1709DFA73E0AF0E4C83"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D6308BADF9D6E1709DFA73E0AF0E4C83"
+        "OwnerKey" = "8:_E6167A1F7616484A9963C8C4CEFB62DE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -239,11 +239,6 @@
             "AssemblyAsmDisplayName" = "8:ServiceTramasMicros.Entidades, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5A269F31B87513E8685C68F32B1AEFE2"
-                    {
-                    "Name" = "8:ServiceTramasMicros.Entidades.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ServiceTramasMicros.Entidades.dll"
             "TargetName" = "8:"
@@ -270,11 +265,6 @@
             "AssemblyAsmDisplayName" = "8:ServiceTramasMicros.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_D6308BADF9D6E1709DFA73E0AF0E4C83"
-                    {
-                    "Name" = "8:ServiceTramasMicros.Model.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:ServiceTramasMicros.Model.dll"
             "TargetName" = "8:"
@@ -324,7 +314,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_D4D6749E235D4B588A0832BC2CB4A790"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder]\\Next-Technologies\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\Next Technologies\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -359,12 +349,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Next-Technologies"
+        "Manufacturer" = "8:Next Technologies"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:ServiceTramasMicrosSetup"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Next-Technologies"
+        "ARPCONTACT" = "8:Next Technologies"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"

@@ -365,32 +365,43 @@ namespace ServiceTramasMicros
                     //AQUI LOG CREAR Para trama Actual
                     #region Carpetas a donde puede irse la trama
                     string currentNombreArchivo = tramaTargetFile.Name;
+                    string currentNombreArchivoNoExtension = Path.GetFileNameWithoutExtension(tramaTargetFile.Name);
                     string currentTramaProcesado = fullPathProcesado + currentNombreArchivo;
                     string currentTramaDuplicado = fullPathDuplicado + currentNombreArchivo;
                     string currentTramaDefinirRVC = fullPathDefinirRVC + currentNombreArchivo;
                     string currentTramaNoFacturable = fullPathNoFacturable + currentNombreArchivo;
                     string currentTramaError = fullPathError + currentNombreArchivo;
-                    string currentTramaClon = cfn.ClonarTramaFolder + currentNombreArchivo;
+                    string destinoTramaClon = "";
+                    string origenTramaClon = "";
+
+                    if (!String.IsNullOrEmpty(cfn.ClonarTramaFolder))
+                    {
+                        destinoTramaClon = cfn.ClonarTramaFolder + currentNombreArchivoNoExtension + ".txt";
+                        origenTramaClon = cfn.TramasFolder + currentNombreArchivoNoExtension + ".txt";
+                    }
+
                     #endregion
                     //AQUI LOG Debe Crearse para la trama Actual
-                    string currentTramaLogFullPath = fullPathLogs + Path.GetFileNameWithoutExtension(tramaTargetFile.FullName) + "_log.txt";
-                    string referenciaToCloud_CI_CC = referenciaGetReferencia(Path.GetFileNameWithoutExtension(tramaTargetFile.FullName))
+                    string currentTramaLogFullPath = fullPathLogs + currentNombreArchivoNoExtension + "_log.txt";
+                    string referenciaToCloud_CI_CC = referenciaGetReferencia(currentNombreArchivoNoExtension)
                                                    + "_" + cfn.ClaveFacto + "_" + cfn.CentroConsumo;
-                    LogWriter logObjectTrama = new LogWriter("Se crea log para trama con nombre de archivo [" + currentNombreArchivo + "]", currentTramaLogFullPath
+                    LogWriter logObjectTrama = new LogWriter("Inicializar Log archivo [" + currentNombreArchivo + "]", currentTramaLogFullPath
                                                             , cfn.ClaveFacto, cfn.CentroConsumo, currentNombreArchivo
                                                             , referenciaToCloud_CI_CC);
+                    logObjectTrama.LogWrite("Se crea log para trama con nombre de archivo [" + currentNombreArchivo + "]"
+                                           , LogWriter.EnumTipoError.Important);
 
                     Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
-                    logObjectTrama.LogWrite("Se enviará a Facto", LogWriter.EnumTipoError.Informative);
+                    logObjectTrama.LogWrite("Se enviará a Facto", LogWriter.EnumTipoError.Important);
                     Respuesta = EnviarDatosFacto(tramaTargetFile.FullName, logObjectTrama);
                     string mensajeFacto = (Respuesta != null && Respuesta.mensaje != null ? Respuesta.mensaje : "");
                     if (Respuesta.codigo == 100)
                     {
-                        logObjectTrama.LogWrite("La respuesta fue 100 Exito: " + mensajeFacto, LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("La respuesta fue 100 Exito: " + mensajeFacto, LogWriter.EnumTipoError.Important);
                         #region Procesados
-                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, currentTramaClon, logObjectTrama);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, destinoTramaClon, logObjectTrama, origenTramaClon);
                         //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
-                        logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Important);
                         EnviarTramaANube(fileNameFinal, logObjectTrama);
                         continue;
                         #endregion
@@ -606,7 +617,7 @@ namespace ServiceTramasMicros
         /// <param name="destino">Ruta completa del destino del archivo</param>
         /// <param name="reCopiar">Ruta completa del archivo donde será copiado después de moverlo al destino</param>
         /// <returns>Regresa el nombre de archivo completo en destino</returns>
-        public static string MoverArchivo(string origen, string destino, string reCopiar = "", LogWriter logInclude = null)
+        public static string MoverArchivo(string origen, string destino, string reCopiar = "", LogWriter logInclude = null, string sourceClon = "")
         {
             try
             {
@@ -626,14 +637,14 @@ namespace ServiceTramasMicros
                 if (logInclude != null)
                     logInclude.LogWrite("El archivo se movió al destino [" + destino + "]", LogWriter.EnumTipoError.Informative);
 
-                if (reCopiar != "")
+                if (reCopiar != "" && sourceClon != "")
                 {
                     if (logInclude != null)
-                        logInclude.LogWrite("La configuración indica clonar la trama a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Informative);
+                        logInclude.LogWrite("La configuración indica clonar la trama a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Important);
 
                     try
                     {
-                        File.Copy(destino, reCopiar);
+                        File.Copy(sourceClon, reCopiar);
 
                         if (logInclude != null)
                             logInclude.LogWrite("La trama fue clonada a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Informative);
@@ -731,15 +742,15 @@ namespace ServiceTramasMicros
 
                     if (versionCfdi == Facto.enumVersionCfdiIntegracion.DOCUMENTO_FISCAL)
                     {
-                        logObjectTrama.LogWrite("La versión facto configurada es [" + versionCfdi + "]; Se intentará recuperar datos del emisor a partir del XML", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("La versión facto configurada es [" + versionCfdi + "]; Se intentará recuperar datos del emisor a partir del XML", LogWriter.EnumTipoError.Important);
                         em = GetEmisorFromXMLTrama(nombreArchivo);
                     }
                     else
                     {
-                        logObjectTrama.LogWrite("La versión facto configurada es [" + versionCfdi + "]; Se intentará recuperar datos del emisor a partir del TXT", LogWriter.EnumTipoError.Informative);
+                        logObjectTrama.LogWrite("La versión facto configurada es [" + versionCfdi + "]; Se intentará recuperar datos del emisor a partir del TXT", LogWriter.EnumTipoError.Important);
                         em = GetEmisorFromTXTTrama(nombreArchivo);
                     }
-                    logObjectTrama.LogWrite("Preparar Request", LogWriter.EnumTipoError.Informative);
+                    logObjectTrama.LogWrite("Preparar Request", LogWriter.EnumTipoError.Important);
                     #region Información Emisor Facto
                     request.emisor = new Facto.emisor();
                     request.emisor.rfc = em.rfc;
@@ -753,19 +764,19 @@ namespace ServiceTramasMicros
                     request.informacionFacto.versionCfdi = versionCfdi;
                     request.informacionFacto.versionCfdiSpecified = true;
                     #endregion
-                    logObjectTrama.LogWrite("Convertir a Bytes archivo", LogWriter.EnumTipoError.Informative);
+                    logObjectTrama.LogWrite("Convertir a Bytes archivo", LogWriter.EnumTipoError.Important);
                     request.file = ConvertFileToByteArray(nombreArchivo);
                     string requestString = "Identificador Integracion: " + request.informacionFacto.identificadorIntegracion
                                          + "; foliosFacto: false"
                                          + "; integracion: Facto.enumIntegracion.MICROS"
                                          + "; versionCfdi: " + versionCfdi;
 
-                    logObjectTrama.LogWrite("Petición para WebService (request) será: " + requestString, LogWriter.EnumTipoError.Informative);
+                    logObjectTrama.LogWrite("Petición para WebService (request) será: " + requestString, LogWriter.EnumTipoError.Important);
                     respuesta = servicio.procesarIntegracion(request, "xxxxxxx");
                     logObjectTrama.LogWrite("Respuesta recibida de Facto (response): "
                                           + "Codigo: " + respuesta.codigo
                                           + "; Mensaje: " + respuesta.mensaje
-                                          , LogWriter.EnumTipoError.Informative);
+                                          , LogWriter.EnumTipoError.Important);
                 }
                 return respuesta;
             }
@@ -912,14 +923,14 @@ namespace ServiceTramasMicros
                 if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
                 {
                     string xmlTargetString = File.ReadAllText(fileName);
-                    logTramaTarget.LogWrite("Se enviará el contenido XML a la nube", LogWriter.EnumTipoError.Informative);
+                    logTramaTarget.LogWrite("Se enviará el contenido XML a la nube", LogWriter.EnumTipoError.Important);
                     logTramaTarget.SendTramaToCloud(fileName, null, xmlTargetString);
                 }
                 else
                 {
                     ProcesaCadena procesar = new ProcesaCadena();
                     Layout layoutTarget = procesar.GeneraLayoutFromTramaLimpia(fileName);
-                    logTramaTarget.LogWrite("Se enviará objeto Layout (trama) a la nube", LogWriter.EnumTipoError.Informative);
+                    logTramaTarget.LogWrite("Se enviará objeto Layout (trama) a la nube", LogWriter.EnumTipoError.Important);
                     logTramaTarget.SendTramaToCloud(fileName, layoutTarget, "");
                 }
             }
