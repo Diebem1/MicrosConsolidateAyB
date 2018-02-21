@@ -113,7 +113,7 @@ namespace ServiceTramasMicros.Model
             try
             {
                 WSLogMicros.Service1Client logCliente = new WSLogMicros.Service1Client();
-                logCliente.InsertarLog(this.claveFacto, this.centroConsumo, this.nombreFile
+                logCliente.InsertarLogAsync(this.claveFacto, this.centroConsumo, this.nombreFile
                                     , (type == EnumTipoError.ErrTry ? errorMensaje : "")
                                     , (type != EnumTipoError.ErrTry ? errorMensaje : "")
                                     , DateTime.Now
@@ -149,7 +149,7 @@ namespace ServiceTramasMicros.Model
                     infoTramaWS.nombreArchivo = layout.nombreArchivo;
                 }
                 #endregion
-                clienteTramaWS.InsertarTrama(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
+                clienteTramaWS.InsertarTramaAsync(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
                 this.LogWrite("Trama enviado a la nube", EnumTipoError.Important);
             }
             #region Control Excepciones especificas

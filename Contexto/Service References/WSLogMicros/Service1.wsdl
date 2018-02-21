@@ -27,6 +27,12 @@
   <wsdl:message name="IService1_InsertarTrama_OutputMessage">
     <wsdl:part name="parameters" element="tns:InsertarTramaResponse" />
   </wsdl:message>
+  <wsdl:message name="IService1_InsertaPing_InputMessage">
+    <wsdl:part name="parameters" element="tns:InsertaPing" />
+  </wsdl:message>
+  <wsdl:message name="IService1_InsertaPing_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InsertaPingResponse" />
+  </wsdl:message>
   <wsdl:message name="IService1_GetDataUsingDataContract_InputMessage">
     <wsdl:part name="parameters" element="tns:GetDataUsingDataContract" />
   </wsdl:message>
@@ -45,6 +51,10 @@
     <wsdl:operation name="InsertarTrama">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/InsertarTrama" message="tns:IService1_InsertarTrama_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IService1/InsertarTramaResponse" message="tns:IService1_InsertarTrama_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertaPing">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/InsertaPing" message="tns:IService1_InsertaPing_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/InsertaPingResponse" message="tns:IService1_InsertaPing_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetDataUsingDataContract">
       <wsdl:input wsaw:Action="http://tempuri.org/IService1/GetDataUsingDataContract" message="tns:IService1_GetDataUsingDataContract_InputMessage" />
@@ -73,6 +83,15 @@
     </wsdl:operation>
     <wsdl:operation name="InsertarTrama">
       <soap:operation soapAction="http://tempuri.org/IService1/InsertarTrama" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertaPing">
+      <soap:operation soapAction="http://tempuri.org/IService1/InsertaPing" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

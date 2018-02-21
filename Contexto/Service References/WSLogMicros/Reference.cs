@@ -222,14 +222,42 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetData", ReplyAction="http://tempuri.org/IService1/GetDataResponse")]
         string GetData(int value);
         
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/GetData", ReplyAction="http://tempuri.org/IService1/GetDataResponse")]
+        System.IAsyncResult BeginGetData(int value, System.AsyncCallback callback, object asyncState);
+        
+        string EndGetData(System.IAsyncResult result);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertarLog", ReplyAction="http://tempuri.org/IService1/InsertarLogResponse")]
         void InsertarLog(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/InsertarLog", ReplyAction="http://tempuri.org/IService1/InsertarLogResponse")]
+        System.IAsyncResult BeginInsertarLog(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, System.AsyncCallback callback, object asyncState);
+        
+        void EndInsertarLog(System.IAsyncResult result);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertarTrama", ReplyAction="http://tempuri.org/IService1/InsertarTramaResponse")]
         void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML);
         
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/InsertarTrama", ReplyAction="http://tempuri.org/IService1/InsertarTramaResponse")]
+        System.IAsyncResult BeginInsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML, System.AsyncCallback callback, object asyncState);
+        
+        void EndInsertarTrama(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertaPing", ReplyAction="http://tempuri.org/IService1/InsertaPingResponse")]
+        void InsertaPing(string clave);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/InsertaPing", ReplyAction="http://tempuri.org/IService1/InsertaPingResponse")]
+        System.IAsyncResult BeginInsertaPing(string clave, System.AsyncCallback callback, object asyncState);
+        
+        void EndInsertaPing(System.IAsyncResult result);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IService1/GetDataUsingDataContractResponse")]
         ServiceTramasMicros.Model.WSLogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/GetDataUsingDataContract", ReplyAction="http://tempuri.org/IService1/GetDataUsingDataContractResponse")]
+        System.IAsyncResult BeginGetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite, System.AsyncCallback callback, object asyncState);
+        
+        ServiceTramasMicros.Model.WSLogMicros.CompositeType EndGetDataUsingDataContract(System.IAsyncResult result);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -238,7 +266,75 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class GetDataCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public GetDataCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public string Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class GetDataUsingDataContractCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public GetDataUsingDataContractCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public ServiceTramasMicros.Model.WSLogMicros.CompositeType Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((ServiceTramasMicros.Model.WSLogMicros.CompositeType)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class Service1Client : System.ServiceModel.ClientBase<ServiceTramasMicros.Model.WSLogMicros.IService1>, ServiceTramasMicros.Model.WSLogMicros.IService1 {
+        
+        private BeginOperationDelegate onBeginGetDataDelegate;
+        
+        private EndOperationDelegate onEndGetDataDelegate;
+        
+        private System.Threading.SendOrPostCallback onGetDataCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginInsertarLogDelegate;
+        
+        private EndOperationDelegate onEndInsertarLogDelegate;
+        
+        private System.Threading.SendOrPostCallback onInsertarLogCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginInsertarTramaDelegate;
+        
+        private EndOperationDelegate onEndInsertarTramaDelegate;
+        
+        private System.Threading.SendOrPostCallback onInsertarTramaCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginInsertaPingDelegate;
+        
+        private EndOperationDelegate onEndInsertaPingDelegate;
+        
+        private System.Threading.SendOrPostCallback onInsertaPingCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginGetDataUsingDataContractDelegate;
+        
+        private EndOperationDelegate onEndGetDataUsingDataContractDelegate;
+        
+        private System.Threading.SendOrPostCallback onGetDataUsingDataContractCompletedDelegate;
         
         public Service1Client() {
         }
@@ -259,20 +355,285 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
                 base(binding, remoteAddress) {
         }
         
+        public event System.EventHandler<GetDataCompletedEventArgs> GetDataCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertarLogCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertarTramaCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertaPingCompleted;
+        
+        public event System.EventHandler<GetDataUsingDataContractCompletedEventArgs> GetDataUsingDataContractCompleted;
+        
         public string GetData(int value) {
             return base.Channel.GetData(value);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginGetData(int value, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginGetData(value, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public string EndGetData(System.IAsyncResult result) {
+            return base.Channel.EndGetData(result);
+        }
+        
+        private System.IAsyncResult OnBeginGetData(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            int value = ((int)(inValues[0]));
+            return this.BeginGetData(value, callback, asyncState);
+        }
+        
+        private object[] OnEndGetData(System.IAsyncResult result) {
+            string retVal = this.EndGetData(result);
+            return new object[] {
+                    retVal};
+        }
+        
+        private void OnGetDataCompleted(object state) {
+            if ((this.GetDataCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.GetDataCompleted(this, new GetDataCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void GetDataAsync(int value) {
+            this.GetDataAsync(value, null);
+        }
+        
+        public void GetDataAsync(int value, object userState) {
+            if ((this.onBeginGetDataDelegate == null)) {
+                this.onBeginGetDataDelegate = new BeginOperationDelegate(this.OnBeginGetData);
+            }
+            if ((this.onEndGetDataDelegate == null)) {
+                this.onEndGetDataDelegate = new EndOperationDelegate(this.OnEndGetData);
+            }
+            if ((this.onGetDataCompletedDelegate == null)) {
+                this.onGetDataCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnGetDataCompleted);
+            }
+            base.InvokeAsync(this.onBeginGetDataDelegate, new object[] {
+                        value}, this.onEndGetDataDelegate, this.onGetDataCompletedDelegate, userState);
         }
         
         public void InsertarLog(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC) {
             base.Channel.InsertarLog(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC);
         }
         
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginInsertarLog(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginInsertarLog(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndInsertarLog(System.IAsyncResult result) {
+            base.Channel.EndInsertarLog(result);
+        }
+        
+        private System.IAsyncResult OnBeginInsertarLog(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string claveFacto = ((string)(inValues[0]));
+            string centroConsumo = ((string)(inValues[1]));
+            string nombreFile = ((string)(inValues[2]));
+            string errorTry = ((string)(inValues[3]));
+            string error = ((string)(inValues[4]));
+            System.DateTime recordDate = ((System.DateTime)(inValues[5]));
+            string referencia_CI_CC = ((string)(inValues[6]));
+            return this.BeginInsertarLog(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, callback, asyncState);
+        }
+        
+        private object[] OnEndInsertarLog(System.IAsyncResult result) {
+            this.EndInsertarLog(result);
+            return null;
+        }
+        
+        private void OnInsertarLogCompleted(object state) {
+            if ((this.InsertarLogCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.InsertarLogCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void InsertarLogAsync(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC) {
+            this.InsertarLogAsync(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, null);
+        }
+        
+        public void InsertarLogAsync(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, object userState) {
+            if ((this.onBeginInsertarLogDelegate == null)) {
+                this.onBeginInsertarLogDelegate = new BeginOperationDelegate(this.OnBeginInsertarLog);
+            }
+            if ((this.onEndInsertarLogDelegate == null)) {
+                this.onEndInsertarLogDelegate = new EndOperationDelegate(this.OnEndInsertarLog);
+            }
+            if ((this.onInsertarLogCompletedDelegate == null)) {
+                this.onInsertarLogCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnInsertarLogCompleted);
+            }
+            base.InvokeAsync(this.onBeginInsertarLogDelegate, new object[] {
+                        claveFacto,
+                        centroConsumo,
+                        nombreFile,
+                        errorTry,
+                        error,
+                        recordDate,
+                        referencia_CI_CC}, this.onEndInsertarLogDelegate, this.onInsertarLogCompletedDelegate, userState);
+        }
+        
         public void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML) {
             base.Channel.InsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML);
         }
         
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginInsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginInsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndInsertarTrama(System.IAsyncResult result) {
+            base.Channel.EndInsertarTrama(result);
+        }
+        
+        private System.IAsyncResult OnBeginInsertarTrama(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string claveFacto = ((string)(inValues[0]));
+            string centroConsumo = ((string)(inValues[1]));
+            string nombreFile = ((string)(inValues[2]));
+            ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama = ((ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama)(inValues[3]));
+            System.DateTime recordDate = ((System.DateTime)(inValues[4]));
+            string referencia_CI_CC = ((string)(inValues[5]));
+            string tramaXML = ((string)(inValues[6]));
+            return this.BeginInsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML, callback, asyncState);
+        }
+        
+        private object[] OnEndInsertarTrama(System.IAsyncResult result) {
+            this.EndInsertarTrama(result);
+            return null;
+        }
+        
+        private void OnInsertarTramaCompleted(object state) {
+            if ((this.InsertarTramaCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.InsertarTramaCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void InsertarTramaAsync(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML) {
+            this.InsertarTramaAsync(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML, null);
+        }
+        
+        public void InsertarTramaAsync(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML, object userState) {
+            if ((this.onBeginInsertarTramaDelegate == null)) {
+                this.onBeginInsertarTramaDelegate = new BeginOperationDelegate(this.OnBeginInsertarTrama);
+            }
+            if ((this.onEndInsertarTramaDelegate == null)) {
+                this.onEndInsertarTramaDelegate = new EndOperationDelegate(this.OnEndInsertarTrama);
+            }
+            if ((this.onInsertarTramaCompletedDelegate == null)) {
+                this.onInsertarTramaCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnInsertarTramaCompleted);
+            }
+            base.InvokeAsync(this.onBeginInsertarTramaDelegate, new object[] {
+                        claveFacto,
+                        centroConsumo,
+                        nombreFile,
+                        trama,
+                        recordDate,
+                        referencia_CI_CC,
+                        tramaXML}, this.onEndInsertarTramaDelegate, this.onInsertarTramaCompletedDelegate, userState);
+        }
+        
+        public void InsertaPing(string clave) {
+            base.Channel.InsertaPing(clave);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginInsertaPing(string clave, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginInsertaPing(clave, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndInsertaPing(System.IAsyncResult result) {
+            base.Channel.EndInsertaPing(result);
+        }
+        
+        private System.IAsyncResult OnBeginInsertaPing(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string clave = ((string)(inValues[0]));
+            return this.BeginInsertaPing(clave, callback, asyncState);
+        }
+        
+        private object[] OnEndInsertaPing(System.IAsyncResult result) {
+            this.EndInsertaPing(result);
+            return null;
+        }
+        
+        private void OnInsertaPingCompleted(object state) {
+            if ((this.InsertaPingCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.InsertaPingCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void InsertaPingAsync(string clave) {
+            this.InsertaPingAsync(clave, null);
+        }
+        
+        public void InsertaPingAsync(string clave, object userState) {
+            if ((this.onBeginInsertaPingDelegate == null)) {
+                this.onBeginInsertaPingDelegate = new BeginOperationDelegate(this.OnBeginInsertaPing);
+            }
+            if ((this.onEndInsertaPingDelegate == null)) {
+                this.onEndInsertaPingDelegate = new EndOperationDelegate(this.OnEndInsertaPing);
+            }
+            if ((this.onInsertaPingCompletedDelegate == null)) {
+                this.onInsertaPingCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnInsertaPingCompleted);
+            }
+            base.InvokeAsync(this.onBeginInsertaPingDelegate, new object[] {
+                        clave}, this.onEndInsertaPingDelegate, this.onInsertaPingCompletedDelegate, userState);
+        }
+        
         public ServiceTramasMicros.Model.WSLogMicros.CompositeType GetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite) {
             return base.Channel.GetDataUsingDataContract(composite);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginGetDataUsingDataContract(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginGetDataUsingDataContract(composite, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public ServiceTramasMicros.Model.WSLogMicros.CompositeType EndGetDataUsingDataContract(System.IAsyncResult result) {
+            return base.Channel.EndGetDataUsingDataContract(result);
+        }
+        
+        private System.IAsyncResult OnBeginGetDataUsingDataContract(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            ServiceTramasMicros.Model.WSLogMicros.CompositeType composite = ((ServiceTramasMicros.Model.WSLogMicros.CompositeType)(inValues[0]));
+            return this.BeginGetDataUsingDataContract(composite, callback, asyncState);
+        }
+        
+        private object[] OnEndGetDataUsingDataContract(System.IAsyncResult result) {
+            ServiceTramasMicros.Model.WSLogMicros.CompositeType retVal = this.EndGetDataUsingDataContract(result);
+            return new object[] {
+                    retVal};
+        }
+        
+        private void OnGetDataUsingDataContractCompleted(object state) {
+            if ((this.GetDataUsingDataContractCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.GetDataUsingDataContractCompleted(this, new GetDataUsingDataContractCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void GetDataUsingDataContractAsync(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite) {
+            this.GetDataUsingDataContractAsync(composite, null);
+        }
+        
+        public void GetDataUsingDataContractAsync(ServiceTramasMicros.Model.WSLogMicros.CompositeType composite, object userState) {
+            if ((this.onBeginGetDataUsingDataContractDelegate == null)) {
+                this.onBeginGetDataUsingDataContractDelegate = new BeginOperationDelegate(this.OnBeginGetDataUsingDataContract);
+            }
+            if ((this.onEndGetDataUsingDataContractDelegate == null)) {
+                this.onEndGetDataUsingDataContractDelegate = new EndOperationDelegate(this.OnEndGetDataUsingDataContract);
+            }
+            if ((this.onGetDataUsingDataContractCompletedDelegate == null)) {
+                this.onGetDataUsingDataContractCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnGetDataUsingDataContractCompleted);
+            }
+            base.InvokeAsync(this.onBeginGetDataUsingDataContractDelegate, new object[] {
+                        composite}, this.onEndGetDataUsingDataContractDelegate, this.onGetDataUsingDataContractCompletedDelegate, userState);
         }
     }
 }

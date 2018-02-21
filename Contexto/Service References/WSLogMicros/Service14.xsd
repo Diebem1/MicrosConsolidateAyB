@@ -52,6 +52,18 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="InsertaPing">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="clave" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertaPingResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetDataUsingDataContract">
     <xs:complexType>
       <xs:sequence>
