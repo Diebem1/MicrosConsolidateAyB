@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace ServiceTramasMicros.Model
@@ -167,6 +168,31 @@ namespace ServiceTramasMicros.Model
                 this.LogWrite("Warning en envío trama a la nube: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
             }
             #endregion
+        }
+        public static void SendPingToCloud(string claveFacto, string centroConsumo)
+        {
+            string macAddr = "";
+            try
+            {
+                var MAC = (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                           where nic.OperationalStatus == OperationalStatus.Up
+                           && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback
+                           select nic).FirstOrDefault();
+                macAddr = MAC.GetPhysicalAddress().ToString();
+            }
+            catch (Exception)
+            {
+                macAddr = "No MAC";
+            }
+            try
+            {
+                WSLogMicros.Service1Client clientePingWS = new WSLogMicros.Service1Client();
+                clientePingWS.InsertaPingAsync(macAddr + "_" + claveFacto + "_" + centroConsumo);
+            }
+            catch (Exception)
+            {
+            }
+            return;
         }
     }
 }

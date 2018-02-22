@@ -270,12 +270,11 @@ namespace ServiceTramasMicros
                 }
                 return docFiscal;
             }
-            catch (Exception exs)
+            catch (Exception ex)
             {
+                throw new Exception(ex.Message + "-" + ex.StackTrace);
             }
-            return null;
         }
-
         private sucursal AgregarSucursal(string noSucursal)
         {
             sucursal su = new sucursal();
@@ -425,7 +424,6 @@ namespace ServiceTramasMicros
             catch (Exception ex)
             {
                 throw new Exception("Error al agregar los impuestos" + ex.Message);
-                return null;
             }
         }
         private detalleUso[] agregarDetalleUso()
@@ -482,13 +480,11 @@ namespace ServiceTramasMicros
                 usr.elaboro = "";
                 usr.sello = "";
                 return usr;
-
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al agregar el identificador " + ex.Message);
             }
-            return null;
         }
         private plantilla AgregaPlantilla()
         {

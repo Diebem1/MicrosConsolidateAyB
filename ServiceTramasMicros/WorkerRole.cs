@@ -18,10 +18,12 @@ namespace ServiceTramasMicros
         public Thread _thread;
         static public Config cfn = new Config();
         static public List<Emisor> emisorCfnList = new List<Emisor>();
+        public DateTime fechaUltimoPing = DateTime.Now;
         public void WorkerThreadFunc()
         {
             while (!_shutdownEvent.WaitOne(0))
             {
+                EnviarPing();
                 //Aquí va todo lo que se tiene que validar y configurar para que el servicio siga su ejecución
                 LogWriter logGeneralEvents = null;
                 try
@@ -416,7 +418,15 @@ namespace ServiceTramasMicros
                         continue;
                         #endregion
                     }
-                    else if (!String.IsNullOrEmpty(Respuesta.mensaje))
+                    else if (Respuesta.codigo == 400)
+                    {
+                        #region Error comunicación con Facto
+                        logObjectTrama.LogWrite("La respuesta fue 301 Fallo Comunicación Facto, la trama no será movida."
+                                              + " Detalle: " + mensajeFacto, LogWriter.EnumTipoError.Err);
+                        continue;
+                        #endregion
+                    }
+                    else if (!String.IsNullOrEmpty(mensajeFacto))
                     {
                         logObjectTrama.LogWrite("La respuesta fue 300 Error: " + mensajeFacto, LogWriter.EnumTipoError.Err);
                         #region DefinirRVC
@@ -785,9 +795,22 @@ namespace ServiceTramasMicros
             {
                 string mensajeException = "TimeOut con Facto"
                                         + "; Detalle: " + exTime.Message;
-                respuesta.codigo = 300;//Codigo de error general
+                respuesta.codigo = 400;//Codigo de error ajeno a facto
                 respuesta.mensaje = mensajeException;
-                logObjectTrama.LogWrite("Error: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+                //logObjectTrama.LogWrite("Error: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+                return respuesta;
+            }
+            catch (System.Net.WebException exNetWeb)
+            {
+                string netWebStatus = (exNetWeb.Status != null ? exNetWeb.Status.ToString() : "null");
+                string netWebInner = (exNetWeb.InnerException != null ? exNetWeb.InnerException.Message : "null");
+                string mensajeException = "Fallo de comunicación con Facto"
+                                        + "; Detalle: " + exNetWeb.Message
+                                        + "; InnerException: " + netWebInner
+                                        + "; Status: " + netWebStatus;
+                respuesta.codigo = 400;//Codigo de error ajeno a facto
+                respuesta.mensaje = mensajeException;
+                //logObjectTrama.LogWrite("Error: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
                 return respuesta;
             }
             catch (Exception exGeneral)
@@ -796,7 +819,7 @@ namespace ServiceTramasMicros
                 string mensajeException = "Error general envío a Facto: " + exGeneral.Message + innerEx;
                 respuesta.codigo = 300;//Codigo de error general
                 respuesta.mensaje = mensajeException;
-                logObjectTrama.LogWrite("Error: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+                //logObjectTrama.LogWrite("Error: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
                 return respuesta;
             }
             #endregion
@@ -909,8 +932,6 @@ namespace ServiceTramasMicros
             }
             catch (Exception)
             {
-
-                throw;
             }
 
             return referencia;
@@ -940,6 +961,27 @@ namespace ServiceTramasMicros
                                         , LogWriter.EnumTipoError.ErrTry);
             }
             #endregion
+        }
+        private void EnviarPing()
+        {
+            int minutosDiferencia = 5;
+            try
+            {
+                minutosDiferencia = Convert.ToInt32(System.Configuration.ConfigurationSettings
+                                           .AppSettings["PingToCloud"]);
+            }
+            catch (Exception)
+            {
+                minutosDiferencia = 5;
+            }
+
+            DateTime horaInicio = DateTime.Now;
+            //Lleva más de cinco ( o N minutos) desde ultimo Ping
+            if (fechaUltimoPing <= horaInicio.AddMinutes(-minutosDiferencia))
+            {
+                LogWriter.SendPingToCloud(cfn.ClaveFacto, cfn.CentroConsumo);
+                fechaUltimoPing = DateTime.Now;
+            }
         }
     }
 }
