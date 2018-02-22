@@ -18,15 +18,15 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://192.168.15.2:22356/Service1.svc?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://nterrorsinfo.azurewebsites.net/Service1.svc?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="034bad14-2661-4ab0-b387-d54915ebd783" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?xsd=xsd2" />
-    <MetadataFile FileName="Service11.xsd" MetadataType="Schema" ID="fbda40e3-fd37-4a51-b7e0-f692770bbed8" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?xsd=xsd1" />
-    <MetadataFile FileName="Service12.xsd" MetadataType="Schema" ID="27020a49-4ede-4560-a396-448bddd12914" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?xsd=xsd4" />
-    <MetadataFile FileName="Service1.wsdl" MetadataType="Wsdl" ID="1f40715d-01b4-4867-8a41-8071faf8b01f" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?wsdl" />
-    <MetadataFile FileName="Service13.xsd" MetadataType="Schema" ID="25da5315-9dcc-40ec-a787-a470478eb098" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?xsd=xsd3" />
-    <MetadataFile FileName="Service14.xsd" MetadataType="Schema" ID="a669113e-f908-4fe6-8113-e0b1aef5a0d8" SourceId="1" SourceUrl="http://192.168.15.2:22356/Service1.svc?xsd=xsd0" />
+    <MetadataFile FileName="Service15.xsd" MetadataType="Schema" ID="4f6295b4-91ae-4a90-b8eb-c511db61043c" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?xsd=xsd4" />
+    <MetadataFile FileName="Service11.wsdl" MetadataType="Wsdl" ID="6188b325-3c91-4f4b-9bfc-75acadd00b53" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?wsdl" />
+    <MetadataFile FileName="Service151.xsd" MetadataType="Schema" ID="4e15fa67-164f-42f8-aea7-4b44cef57da7" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?xsd=xsd0" />
+    <MetadataFile FileName="Service152.xsd" MetadataType="Schema" ID="495b7c92-f755-4d8e-898d-7ad7300b299c" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?xsd=xsd2" />
+    <MetadataFile FileName="Service153.xsd" MetadataType="Schema" ID="c7c90e44-2305-4e4c-bdf2-3a15058a1211" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?xsd=xsd1" />
+    <MetadataFile FileName="Service154.xsd" MetadataType="Schema" ID="554375c2-1157-44e4-8573-2b1a8d67f164" SourceId="1" SourceUrl="http://nterrorsinfo.azurewebsites.net/Service1.svc?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -62,20 +62,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Service References\WSLogMicros\Service1.wsdl" />
-    <None Include="Service References\WSLogMicros\Service1.xsd">
+    <None Include="Service References\WSLogMicros\Service11.wsdl" />
+    <None Include="Service References\WSLogMicros\Service15.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WSLogMicros\Service11.xsd">
+    <None Include="Service References\WSLogMicros\Service151.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WSLogMicros\Service12.xsd">
+    <None Include="Service References\WSLogMicros\Service152.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WSLogMicros\Service13.xsd">
+    <None Include="Service References\WSLogMicros\Service153.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\WSLogMicros\Service14.xsd">
+    <None Include="Service References\WSLogMicros\Service154.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\WSLogMicros\ServiceTramasMicros.Model.WSLogMicros.CompositeType.datasource">
