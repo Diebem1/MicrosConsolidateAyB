@@ -42,7 +42,7 @@ namespace ServiceTramasMicros
                     bool EsMsgVersion = CheckVersion(msg.Data);
                     if (EsMsgVersion == true)
                     {
-                        msg.Version = WorkerRole.cfn.Version;
+                        msg.Version = "";
                     }
                     #endregion
 

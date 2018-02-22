@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuracion>
 	<config>
-		<Puerto>6000</Puerto>
-		<!--Ruta raíz para todas las carpetas de control de este servicio-->
+		<!--Ruta raíz para todas las carpetas de control de este servicio. Requerido-->
 		<Folder>C:\Micros\Facto\</Folder>
-		<MailNotificacion>soportenextech@gmail.com</MailNotificacion>
-		<PasswordMailNotificacion>!m3s4d34yud4</PasswordMailNotificacion>
-		<HostMail>smtp.gmail.com</HostMail>
-		<PuertoMail>587</PuertoMail>
-		<TituloMail>Insidente Micros</TituloMail>
-		<MailSoporte/>
-		<Sucursal>NEXT GUANAJUATO | idSucursal:306 | idCorporativo:403</Sucursal>
-		<ClaveFacto>CFACTOA</ClaveFacto>
-		<CentroConsumo>CCTESTA</CentroConsumo>
-		<Version>Next- Technologies Micros 3700</Version>
+    
+    <!--Datos de Sucursal. No es requerido-->
+		<Sucursal>NEXT | idSucursal: | idCorporativo:</Sucursal>
+    
+    <!--Clave de Integración Facto. Requerido-->
+		<ClaveFacto>Aqui_CLAVE</ClaveFacto>
+    
+    <!--Centro de consumo. Requerido-->
+		<CentroConsumo>Aqui_CC</CentroConsumo>    		
+    
+    <!--Dato de autenticación para enviar a Facto las tramas. No requerido-->
 		<Llave>xxxxxxx</Llave>
-		<LocalIp>127.0.0.1</LocalIp>
-		<!--Ruta completa donde se depositan tramas limpias, para posteriormente procesarlas-->
+    
+		<!--Ruta completa deposito de tramas limpias (TXT). Requerido-->
 		<Tramas>C:\Micros\Facto\Tramas</Tramas>
-		<!--Ruta completa donde este cliente debe recuperar tramas sucias generadas por el Socket-->
+    
+		<!--Ruta completa donde este cliente recuperará tramas generadas por Micros Socket. Requerido-->
 		<TramasSucias>C:\Micros\Facto\TramasSucias</TramasSucias>
-		<!--Ruta completa donde este cliente debe enviar las tramas sucias despues de haberlas ocupado-->
+    
+		<!--Ruta completa donde este cliente enviará las tramas generadas por Micros Socket para no volverlas a utilizar. Requerido-->
 		<TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
-		<!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD]-->
+    
+		<!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD] Requerido-->
 		<FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
-		<!--El siguiente parametro es opcional; si se especifica debe ser una ruta completa-->
-		<ClonarTrama>C:\Clones de Tramas</ClonarTrama>
+    
+		<!--Ruta completa para copiar tramas procesadas con exito. Parametro Opcional-->
+		<ClonarTrama></ClonarTrama>    
 	</config>
+  <!--Nodo Emisor por lo menos uno es requerido, debe contener un sólo elemento RFC y por lo menos un elemento Identificador, con atributo numero y un valor como identificador-->
+  <emisor>
+    <RFC>Aqui_Dato_RFC</RFC>
+    <Identificador numero="Aqui_Numero_Micros">Aqui_Numero_Reemplazo</Identificador>
+  </emisor>
+  
+  <!--Si se desean agregar más emisores utilice la siguiente estructura omitiendo los caracteres de comentarios XML-->
+  
+  <!--Caracteres de comentarios INICIO
 	<emisor>
-		<RFC>HHO900507844</RFC>
-		<Identificador numero="1">53</Identificador>
-		<Identificador numero="122">53</Identificador>
-		<Identificador numero="300">3</Identificador>
+		<RFC>Aqui_Dato_RFC</RFC>
+		<Identificador numero="Aqui_Numero_Micros">Aqui_Numero_Reemplazo</Identificador>
 	</emisor>
-	<emisor>
-		<RFC>XOMS131023NU1</RFC>
-		<Identificador numero="101">1</Identificador>
-		<Identificador numero="201">2</Identificador>
-		<Identificador numero="301">3</Identificador>
-	</emisor>
+  Caracteres de comentarios FIN-->  
 </Configuracion>

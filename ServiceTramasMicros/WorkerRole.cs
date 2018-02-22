@@ -19,8 +19,18 @@ namespace ServiceTramasMicros
         static public Config cfn = new Config();
         static public List<Emisor> emisorCfnList = new List<Emisor>();
         public DateTime fechaUltimoPing = DateTime.Now;
+        public int TimeSleep = 10;
         public void WorkerThreadFunc()
         {
+            try
+            {
+                this.TimeSleep = Convert.ToInt32(System.Configuration.ConfigurationSettings
+                                           .AppSettings["TimeSleep"].ToString()) * 1000;
+            }
+            catch (Exception)
+            {
+                this.TimeSleep = 10000;
+            }
             while (!_shutdownEvent.WaitOne(0))
             {
                 EnviarPing();
@@ -475,7 +485,7 @@ namespace ServiceTramasMicros
                     logEspecificoDia.LogWrite("Numero de archivos XML iterados [" + archivosList.Count + "]", LogWriter.EnumTipoError.Informative);
                 else
                     logEspecificoDia.LogWrite("Numero de archivos TXT iterados [" + archivosList.Count + "]", LogWriter.EnumTipoError.Informative);
-                Thread.Sleep(10000);//Esperar antes de volver a iniciar
+                Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
             }
         }
         /// <summary>
@@ -782,7 +792,7 @@ namespace ServiceTramasMicros
                                          + "; versionCfdi: " + versionCfdi;
 
                     logObjectTrama.LogWrite("Petición para WebService (request) será: " + requestString, LogWriter.EnumTipoError.Important);
-                    respuesta = servicio.procesarIntegracion(request, "xxxxxxx");
+                    respuesta = servicio.procesarIntegracion(request, cfn.Llave);
                     logObjectTrama.LogWrite("Respuesta recibida de Facto (response): "
                                           + "Codigo: " + respuesta.codigo
                                           + "; Mensaje: " + respuesta.mensaje

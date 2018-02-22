@@ -7,21 +7,18 @@ namespace ServiceTramasMicros.Entidades
 {
     public class Config
     {
-        public string Puerto { get; set; }
         /// <summary>
         /// Carpeta Raiz donde irán las demas carpetas de control; ya incluye al final del string la diagonal \
         /// </summary>
         public string FolderRoot { get; set; }
-        public string MailNotificacion { get; set; }
-        public string PasswordMailNotificacion { get; set; }
-        public string HostMail { get; set; }
-        public string PuertoMail { get; set; }
-        public string TituloMail { get; set; }
-        public string MailSoporte { get; set; }
+        /// <summary>
+        /// Dato de autenticación para enviar a Facto las tramas
+        /// </summary>
         public string Llave { get; set; }
-        public string Version { get; set; }
+        /// <summary>
+        /// Datos de la Sucursal. No requerido por el momento
+        /// </summary>
         public string Sucursal { get; set; }
-        public string LocalIp { get; set; }
         /// <summary>
         /// Ruta completa de las tramas; ya incluye al final del string la diagonal \
         /// </summary>

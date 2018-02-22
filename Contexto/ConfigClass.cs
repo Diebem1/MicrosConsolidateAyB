@@ -18,18 +18,11 @@ namespace ServiceTramasMicros.Model
                 XDocument EmisorXmlConfig = XDocument.Load(path + @"\Emisor.xml");
                 XElement nodoConfig = EmisorXmlConfig.Elements("Configuracion").Elements("config").FirstOrDefault();
                 #region Leer configuración
-                cfn.Puerto = nodoConfig.Element("Puerto").Value;
 
                 cfn.FolderRoot = nodoConfig.Element("Folder") != null && !String.IsNullOrEmpty(nodoConfig.Element("Folder").Value) ?
                         nodoConfig.Element("Folder").Value.Trim().TrimEnd('\\') + @"\" : "";
 
-                cfn.MailNotificacion = nodoConfig.Element("MailNotificacion").Value;
-                cfn.PasswordMailNotificacion = nodoConfig.Element("PasswordMailNotificacion").Value;
-                cfn.HostMail = nodoConfig.Element("HostMail").Value;
-                cfn.PuertoMail = nodoConfig.Element("PuertoMail").Value;
-                cfn.TituloMail = nodoConfig.Element("TituloMail").Value;
-                cfn.MailSoporte = nodoConfig.Element("MailSoporte").Value;
-                cfn.Sucursal = nodoConfig.Element("Sucursal").Value;
+                cfn.Sucursal = nodoConfig.Element("Sucursal") != null ? nodoConfig.Element("Sucursal").Value : "";
 
                 cfn.ClaveFacto = nodoConfig.Element("ClaveFacto") != null && !String.IsNullOrEmpty(nodoConfig.Element("ClaveFacto").Value) ?
                         nodoConfig.Element("ClaveFacto").Value.Trim() : "";
@@ -37,11 +30,7 @@ namespace ServiceTramasMicros.Model
                 cfn.CentroConsumo = nodoConfig.Element("CentroConsumo") != null && !String.IsNullOrEmpty(nodoConfig.Element("CentroConsumo").Value) ?
                         nodoConfig.Element("CentroConsumo").Value.Trim() : "";
 
-                cfn.Version = nodoConfig.Element("Version") != null && !String.IsNullOrEmpty(nodoConfig.Element("Version").Value) ?
-                        nodoConfig.Element("Version").Value.Trim() : "";
-
-                cfn.Llave = nodoConfig.Element("Llave").Value;
-                cfn.LocalIp = nodoConfig.Element("LocalIp").Value;
+                cfn.Llave = nodoConfig.Element("Llave") != null ? nodoConfig.Element("Llave").Value : "";
 
                 cfn.TramasFolder = nodoConfig.Element("Tramas") != null && !String.IsNullOrEmpty(nodoConfig.Element("Tramas").Value) ?
                         nodoConfig.Element("Tramas").Value.Trim().TrimEnd('\\') + @"\" : "";
@@ -135,8 +124,6 @@ namespace ServiceTramasMicros.Model
                 }
                 #endregion
                 #region Valida Config (lo requerido)
-                if (String.IsNullOrEmpty(cfn.Version))
-                    throw new Exception("Es requerido campo 'Version' en configuración");
 
                 if (String.IsNullOrEmpty(cfn.FolderRoot))
                     throw new Exception("Es requerido campo 'Folder' en configuración");
