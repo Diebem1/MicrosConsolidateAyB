@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuracion>
 	<config>
-		<!--Ruta raíz para todas las carpetas de control de este servicio. Requerido-->
+		<!--Ruta raiz para todas las carpetas de control de este servicio. Requerido-->
 		<Folder>C:\Micros\Facto\</Folder>
     
     <!--Datos de Sucursal. No es requerido-->
 		<Sucursal>NEXT | idSucursal: | idCorporativo:</Sucursal>
     
-    <!--Clave de Integración Facto. Requerido-->
+    <!--Clave de Integracion Facto. Requerido-->
 		<ClaveFacto>Aqui_CLAVE</ClaveFacto>
     
     <!--Centro de consumo. Requerido-->
 		<CentroConsumo>Aqui_CC</CentroConsumo>    		
     
-    <!--Dato de autenticación para enviar a Facto las tramas. No requerido-->
+    <!--Dato de autenticacion para enviar a Facto las tramas. No requerido-->
 		<Llave>xxxxxxx</Llave>
     
 		<!--Ruta completa deposito de tramas limpias (TXT). Requerido-->
 		<Tramas>C:\Micros\Facto\Tramas</Tramas>
     
-		<!--Ruta completa donde este cliente recuperará tramas generadas por Micros Socket. Requerido-->
+		<!--Ruta completa donde este cliente recuperara tramas generadas por Micros Socket. Requerido-->
 		<TramasSucias>C:\Micros\Facto\TramasSucias</TramasSucias>
     
-		<!--Ruta completa donde este cliente enviará las tramas generadas por Micros Socket para no volverlas a utilizar. Requerido-->
+		<!--Ruta completa donde este cliente enviara las tramas generadas por Micros Socket para no volverlas a utilizar. Requerido-->
 		<TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
     
 		<!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD] Requerido-->
@@ -31,13 +31,13 @@
 		<!--Ruta completa para copiar tramas procesadas con exito. Parametro Opcional-->
 		<ClonarTrama></ClonarTrama>    
 	</config>
-  <!--Nodo Emisor por lo menos uno es requerido, debe contener un sólo elemento RFC y por lo menos un elemento Identificador, con atributo numero y un valor como identificador-->
+  <!--Nodo Emisor por lo menos uno es requerido, debe contener un solo elemento RFC y por lo menos un elemento Identificador, con atributo numero y un valor como identificador-->
   <emisor>
     <RFC>Aqui_Dato_RFC</RFC>
     <Identificador numero="Aqui_Numero_Micros">Aqui_Numero_Reemplazo</Identificador>
   </emisor>
   
-  <!--Si se desean agregar más emisores utilice la siguiente estructura omitiendo los caracteres de comentarios XML-->
+  <!--Si se desean agregar mas emisores utilice la siguiente estructura omitiendo los caracteres de comentarios XML-->
   
   <!--Caracteres de comentarios INICIO
 	<emisor>
