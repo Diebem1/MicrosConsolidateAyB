@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuracion>
 	<config>
-		<!--Ruta raíz para todas las carpetas de control de este servicio. Requerido-->
+		<!--Ruta raiz para todas las carpetas de control de este servicio. Requerido-->
 		<Folder>C:\Micros\Facto\</Folder>
     
     <!--Datos de Sucursal. No es requerido-->

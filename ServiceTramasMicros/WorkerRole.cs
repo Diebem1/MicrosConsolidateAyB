@@ -431,7 +431,7 @@ namespace ServiceTramasMicros
                     else if (Respuesta.codigo == 400)
                     {
                         #region Error comunicación con Facto
-                        logObjectTrama.LogWrite("La respuesta fue 301 Fallo Comunicación Facto, la trama no será movida."
+                        logObjectTrama.LogWrite("La respuesta fue 400 Fallo Comunicación Facto, la trama no será movida."
                                               + " Detalle: " + mensajeFacto, LogWriter.EnumTipoError.Err);
                         continue;
                         #endregion

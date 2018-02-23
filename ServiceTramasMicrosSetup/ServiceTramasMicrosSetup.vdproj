@@ -46,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5A269F31B87513E8685C68F32B1AEFE2"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_80913E485E374042BAE3EFBD859A6E22"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -59,6 +53,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D6308BADF9D6E1709DFA73E0AF0E4C83"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5A269F31B87513E8685C68F32B1AEFE2"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -88,11 +88,6 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
-                    {
-                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.5"
-                    }
                 }
             }
         }
@@ -351,7 +346,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ServiceTramasMicrosSetup"
         "ProductCode" = "8:{9AEC5A0E-307E-4CEB-A53F-1B502BF1D582}"
-        "PackageCode" = "8:{37F01263-F5FE-407A-ADEA-E1E862C1F457}"
+        "PackageCode" = "8:{7CE8369F-968B-46E3-9C03-4B86C90E7E8D}"
         "UpgradeCode" = "8:{7AC2A9EF-B927-4046-99C4-A5A65D645BD2}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

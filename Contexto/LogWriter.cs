@@ -150,7 +150,7 @@ namespace ServiceTramasMicros.Model
                     infoTramaWS.nombreArchivo = layout.nombreArchivo;
                 }
                 #endregion
-                clienteTramaWS.InsertarTramaAsync(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
+                clienteTramaWS.InsertarTrama(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS, DateTime.Now, this.referencia_CI_CC, xmlString);
                 this.LogWrite("Trama enviado a la nube", EnumTipoError.Important);
             }
             #region Control Excepciones especificas
