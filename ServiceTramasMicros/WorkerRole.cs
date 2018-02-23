@@ -636,6 +636,9 @@ namespace ServiceTramasMicros
         /// <param name="origen">Ruta completa del archivo a mover</param>
         /// <param name="destino">Ruta completa del destino del archivo</param>
         /// <param name="reCopiar">Ruta completa del archivo donde será copiado después de moverlo al destino</param>
+        /// <param name="logInclude">Si se desea dejar log para el movimiento, se pasa un objeto de este tipo</param>
+        /// <param name="sourceClon">Para plan B): Ruta completa de archivo dónde tomar la trama (TXT).
+        ///  Para plan A): se toma la ruta final que tuvo la trama (TXT)</param>
         /// <returns>Regresa el nombre de archivo completo en destino</returns>
         public static string MoverArchivo(string origen, string destino, string reCopiar = "", LogWriter logInclude = null, string sourceClon = "")
         {
@@ -664,7 +667,10 @@ namespace ServiceTramasMicros
 
                     try
                     {
-                        File.Copy(sourceClon, reCopiar);
+                        if (cfn.FactoVersion == "DOCUMENTO_FISCAL")
+                            File.Copy(sourceClon, reCopiar);
+                        else
+                            File.Copy(destino, reCopiar);
 
                         if (logInclude != null)
                             logInclude.LogWrite("La trama fue clonada a ruta [" + reCopiar + "]", LogWriter.EnumTipoError.Informative);
