@@ -59,7 +59,8 @@ namespace ServiceTramasMicros.Model
         /// Escribir una nueva entrada en el Log
         /// </summary>
         /// <param name="logMessage">Mensaje</param>
-        public void LogWrite(string logMessage, EnumTipoError type)
+        public void LogWrite(string logMessage, EnumTipoError type
+                            , string txtCadena = "", string xmlCadena = "", Layout layoutObjeto = null)
         {
             if (type == EnumTipoError.Informative && !this.allLogsEnabled)
                 return;
@@ -69,7 +70,7 @@ namespace ServiceTramasMicros.Model
                 {
                     Log(logMessage, w, type);
                     if (type == EnumTipoError.Err || type == EnumTipoError.ErrTry)
-                        SendLogToCloud(logMessage, type);
+                        SendLogToCloud(logMessage, type, txtCadena, xmlCadena, layoutObjeto);
                 }
             }
             catch (Exception ex)
@@ -109,19 +110,40 @@ namespace ServiceTramasMicros.Model
         /// <summary>
         /// Envia a un servicio Web un mensaje de Log
         /// </summary>
-        private void SendLogToCloud(string errorMensaje, EnumTipoError type)
+        private void SendLogToCloud(string errorMensaje, EnumTipoError type
+                                    , string txtCadena = "", string xmlCadena = "", Layout layoutObjeto = null)
         {
             try
             {
                 WSLogMicros.Service1Client logCliente = new WSLogMicros.Service1Client();
-                logCliente.InsertarLogAsync(this.claveFacto, this.centroConsumo, this.nombreFile
+                WSLogMicros.EnviarLogTrama infoTramaWS = null;
+                #region llenar Layout del WS si aplica
+                if (layoutObjeto != null)
+                {
+                    infoTramaWS = new WSLogMicros.EnviarLogTrama();
+                    infoTramaWS.ltsTender = layoutObjeto.ltsTender.ToArray();
+                    infoTramaWS.ltsPayment = layoutObjeto.ltsPayment.ToArray();
+                    infoTramaWS.ltsMenu = layoutObjeto.ltsMenu.ToArray();
+                    infoTramaWS.ltsDiscount = layoutObjeto.ltsDiscount.ToArray();
+                    infoTramaWS.ltsServicesCharges = layoutObjeto.ltsServicesCharges.ToArray();
+                    infoTramaWS.ltsImpuestos = layoutObjeto.ltsImpuestos.ToArray();
+                    infoTramaWS.nombreArchivo = layoutObjeto.nombreArchivo;
+                }
+                #endregion
+                logCliente.InsertaLogTramaAsync(this.claveFacto, this.centroConsumo, this.nombreFile
                                     , (type == EnumTipoError.ErrTry ? errorMensaje : "")
                                     , (type != EnumTipoError.ErrTry ? errorMensaje : "")
                                     , DateTime.Now
-                                    , this.referencia_CI_CC);
+                                    , this.referencia_CI_CC
+                                    , txtCadena, xmlCadena, infoTramaWS);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Funciones.EscribeLog("Error al enviar Log a la nube"
+                                     + "\nDetalle: " + ex.Message
+                                     + "\nInner: " + (ex.InnerException != null ? ex.InnerException.Message : "")
+                                     + "\nPila de llamadas: " + ex.StackTrace
+                                     , System.Diagnostics.EventLogEntryType.Error);
             }
         }
         /// <summary>
@@ -171,19 +193,7 @@ namespace ServiceTramasMicros.Model
         }
         public static void SendPingToCloud(string claveFacto, string centroConsumo)
         {
-            string macAddr = "";
-            try
-            {
-                var MAC = (from nic in NetworkInterface.GetAllNetworkInterfaces()
-                           where nic.OperationalStatus == OperationalStatus.Up
-                           && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback
-                           select nic).FirstOrDefault();
-                macAddr = MAC.GetPhysicalAddress().ToString();
-            }
-            catch (Exception)
-            {
-                macAddr = "No MAC";
-            }
+            string macAddr = GetMACPC();
             try
             {
                 WSLogMicros.Service1Client clientePingWS = new WSLogMicros.Service1Client();
@@ -194,5 +204,76 @@ namespace ServiceTramasMicros.Model
             }
             return;
         }
+        /// <summary>
+        /// Intenta obtener una dirección de una interfaz de Red activa, diferente a Loopback, de la maquina donde se ejecuta la aplicación
+        /// </summary>
+        /// <returns>Regresa un string con la dirección fisica. Si ocurre un error o no se localiza una dirección, se regresa por default 'No_MAC'</returns>
+        public static string GetMACPC()
+        {
+            string macAddr = "No_MAC";
+            try
+            {
+                var MAC = (from nic in NetworkInterface.GetAllNetworkInterfaces()
+                           where nic.OperationalStatus == OperationalStatus.Up
+                           && nic.NetworkInterfaceType != NetworkInterfaceType.Loopback
+                           select nic).FirstOrDefault();
+                macAddr = MAC.GetPhysicalAddress().ToString();
+            }
+            catch (Exception)
+            {
+                macAddr = "No_MAC";
+            }
+            return macAddr;
+        }
+        ///// <summary>
+        ///// Enviar las tramas erroneas a la nube
+        ///// </summary>
+        ///// <param name="error"></param>
+        ///// <param name="fileNameTrama">nombre de archivo de trama (TXT)</param>
+        ///// <param name="layout">Objeto Layout de la trama</param>
+        ///// <param name="xmlString">Cadena de caracteres del XML de la trama (Doc. Fiscal)</param>
+        ///// <param name="txtString">Cadena de caracteres de la trama</param>
+        ///// <param name="factoVersion">Version de Facto utilizada</param>
+        //public void SendErrorTramaToCloud(string error, string fileNameTrama, Layout layout, string xmlString, string txtString, string factoVersion)
+        //{
+        //    this.LogWrite("Se intentará enviar trama que marcó error a la nube", EnumTipoError.Important);
+        //    try
+        //    {
+        //        WSLogMicros.Service1Client clienteTramaWS = new WSLogMicros.Service1Client();
+        //        WSLogMicros.EnviarLogTrama infoTramaWS = null;
+        //        #region llenar Layout del WS si aplica
+        //        if (layout != null)
+        //        {
+        //            infoTramaWS = new WSLogMicros.EnviarLogTrama();
+        //            infoTramaWS.ltsTender = layout.ltsTender.ToArray();
+        //            infoTramaWS.ltsPayment = layout.ltsPayment.ToArray();
+        //            infoTramaWS.ltsMenu = layout.ltsMenu.ToArray();
+        //            infoTramaWS.ltsDiscount = layout.ltsDiscount.ToArray();
+        //            infoTramaWS.ltsServicesCharges = layout.ltsServicesCharges.ToArray();
+        //            infoTramaWS.ltsImpuestos = layout.ltsImpuestos.ToArray();
+        //            infoTramaWS.nombreArchivo = layout.nombreArchivo;
+        //        }
+        //        #endregion
+        //        //clienteTramaWS.InsertarTrama(this.claveFacto, this.centroConsumo, fileNameTrama, infoTramaWS
+        //        //                            , DateTime.Now, this.referencia_CI_CC, xmlString
+        //        //                            , txtString);
+        //        this.LogWrite("Trama Erronea enviado a la nube", EnumTipoError.Important);
+        //    }
+        //    #region Control Excepciones especificas
+        //    catch (TimeoutException exTime)
+        //    {
+        //        string mensajeException = "TimeOut con Servicio Tramas, método 'InsertarTramaError'"
+        //                                + "; Detalle: " + exTime.Message;
+
+        //        this.LogWrite("Warning en envío trama erronea a la nube: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+        //    }
+        //    catch (Exception exGeneral)
+        //    {
+        //        string innerEx = exGeneral.InnerException != null ? "-" + exGeneral.InnerException.Message : "";
+        //        string mensajeException = "Error general con Servicio Tramas, método 'InsertarTramaError': " + exGeneral.Message + innerEx;
+        //        this.LogWrite("Warning en envío trama erronea a la nube: " + mensajeException, LogWriter.EnumTipoError.ErrTry);
+        //    }
+        //    #endregion
+        //}
     }
 }

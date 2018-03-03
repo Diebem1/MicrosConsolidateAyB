@@ -33,8 +33,8 @@
 	</config>
   <!--Nodo Emisor por lo menos uno es requerido, debe contener un solo elemento RFC y por lo menos un elemento Identificador, con atributo numero y un valor como identificador-->
   <emisor>
-    <RFC>Aqui_Dato_RFC</RFC>
-    <Identificador numero="Aqui_Numero_Micros">Aqui_Numero_Reemplazo</Identificador>
+    <RFC>Aqui_RFC</RFC>
+    <Identificador numero="Aqui_ID_Micros">Aqui_Reemplazo</Identificador>
   </emisor>
   
   <!--Si se desean agregar mas emisores utilice la siguiente estructura omitiendo los caracteres de comentarios XML-->
@@ -46,3 +46,5 @@
 	</emisor>
   Caracteres de comentarios FIN-->  
 </Configuracion>
+
+

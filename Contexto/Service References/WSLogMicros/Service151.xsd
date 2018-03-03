@@ -34,13 +34,34 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="InsertaLogTrama">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="claveFacto" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="centroConsumo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="nombreFile" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="errorTry" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="error" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="recordDate" type="xs:dateTime" />
+        <xs:element minOccurs="0" name="referencia_CI_CC" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="tranaTxt" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="tramXml" nillable="true" type="xs:string" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ServicioMicros" minOccurs="0" name="layout" nillable="true" type="q1:EnviarLog.Trama" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertaLogTramaResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="InsertarTrama">
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="claveFacto" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="centroConsumo" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="nombreFile" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ServicioMicros" minOccurs="0" name="trama" nillable="true" type="q1:EnviarLog.Trama" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/ServicioMicros" minOccurs="0" name="trama" nillable="true" type="q2:EnviarLog.Trama" />
         <xs:element minOccurs="0" name="recordDate" type="xs:dateTime" />
         <xs:element minOccurs="0" name="referencia_CI_CC" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="tramaXML" nillable="true" type="xs:string" />
@@ -48,6 +69,20 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="InsertarTramaResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertaLogPuerto">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="claveFacto" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="centroConsumo" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="error" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InsertaLogPuertoResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>
@@ -67,14 +102,14 @@
   <xs:element name="GetDataUsingDataContract">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/WcfServiceMicros" minOccurs="0" name="composite" nillable="true" type="q2:CompositeType" />
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/WcfServiceMicros" minOccurs="0" name="composite" nillable="true" type="q3:CompositeType" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="GetDataUsingDataContractResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/WcfServiceMicros" minOccurs="0" name="GetDataUsingDataContractResult" nillable="true" type="q3:CompositeType" />
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/WcfServiceMicros" minOccurs="0" name="GetDataUsingDataContractResult" nillable="true" type="q4:CompositeType" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

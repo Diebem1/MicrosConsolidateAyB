@@ -31,7 +31,8 @@
             // 
             // ServicioTramasMicros
             // 
-            this.ServiceName = "ServicioTramasMicrosNext";
+            this.CanStop = false;
+            this.ServiceName = "FactoSender";
 
         }
 

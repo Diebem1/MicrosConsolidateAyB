@@ -25,11 +25,18 @@ namespace ServiceTramasMicros
             try
             {
                 this.TimeSleep = Convert.ToInt32(System.Configuration.ConfigurationSettings
-                                           .AppSettings["TimeSleep"].ToString()) * 1000;
+                                            .AppSettings["TimeSleep"].ToString()) * 1000;
+                if (this.TimeSleep > 300000)
+                {
+                    throw new Exception("Error en [TimeSleep] El tiempo maximo permitido es hasta cinco minutos");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.TimeSleep = 10000;
+                Funciones.EscribeLog("No fue posible establecer TimeSleep con el archivo config actual.\n"
+                                    + ex + " - \nEl valor por default será diez segundos"
+                                    , EventLogEntryType.Warning);
             }
             while (!_shutdownEvent.WaitOne(0))
             {
@@ -51,7 +58,8 @@ namespace ServiceTramasMicros
                     Funciones.EscribeLog(msgEx
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
                 #region Incializar
                 ConfigClass cxt = new ConfigClass();
@@ -68,12 +76,8 @@ namespace ServiceTramasMicros
                         + ex.Message;
                     Funciones.EscribeLog(msgEx
                         , System.Diagnostics.EventLogEntryType.Error);
-                    //_shutdownEvent.Set();
-                    //if (!_thread.Join(3000))
-                    //{ // give the thread 3 seconds to stop
-                    //    _thread.Abort();
-                    //}
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
                 #endregion
                 #region Validar para el ServicioMicros
@@ -88,7 +92,8 @@ namespace ServiceTramasMicros
                                         + ex.Message;
                     Funciones.EscribeLog(msgEx
                                         , System.Diagnostics.EventLogEntryType.Error);
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
 
                 #endregion
@@ -132,7 +137,8 @@ namespace ServiceTramasMicros
                     Funciones.EscribeLog(msgEx
                                                 + ex.Message
                                                 , System.Diagnostics.EventLogEntryType.Error);
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
                 #endregion
                 //Log Iniciar
@@ -151,7 +157,8 @@ namespace ServiceTramasMicros
                 {
                     string msgEx = "Error al leer directorio tramas sucias: ";
                     logEspecificoDia.LogWrite(msgEx + ex.Message, LogWriter.EnumTipoError.ErrTry);
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
                 List<FileInfo> tramasSuciasList = null;
                 try
@@ -162,7 +169,8 @@ namespace ServiceTramasMicros
                 {
                     string msgEx = "Error al leer lista de tramas sucias: ";
                     logEspecificoDia.LogWrite(msgEx + ex.Message, LogWriter.EnumTipoError.ErrTry);
-                    throw new Exception(msgEx);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
+                    continue;
                 }
                 #endregion
 
@@ -192,10 +200,21 @@ namespace ServiceTramasMicros
                         //AQUI LOG Insert Trama Sucia Leída Correctamente
                         logObjectTrama.LogWrite("Trama Sucia Leída Correctamente", LogWriter.EnumTipoError.Informative);
                     }
-                    catch (Exception)
+                    catch (FileLoadException exLoadFile)
+                    {
+                        logObjectTrama.LogWrite("[FileLoadException] Error al leer trama para convertir a String, la trama no se moverá: " + exLoadFile.Message, LogWriter.EnumTipoError.ErrTry);
+                        continue;
+                    }
+                    catch (IOException exIO)
+                    {
+                        logObjectTrama.LogWrite("[IOException] Error al leer trama para convertir a String, la trama no se moverá: " + exIO.Message, LogWriter.EnumTipoError.ErrTry);
+                        continue;
+                    }
+                    catch (Exception ex)
                     {
                         //Aqui log Insert Error al leer trama para convertir a String
-                        logObjectTrama.LogWrite("Error al leer trama para convertir a String", LogWriter.EnumTipoError.ErrTry);
+                        logObjectTrama.LogWrite("Error al leer trama para convertir a String" + ex, LogWriter.EnumTipoError.ErrTry
+                                                , GetTextFromFile(tramaTargetFile.FullName));
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         logObjectTrama.LogWrite("La trama sucia se movió a carpeta errores, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.ErrTry);
                         continue;
@@ -204,14 +223,13 @@ namespace ServiceTramasMicros
                     {
                         logObjectTrama.LogWrite("Inicia ProcesarCadena trama bruta", LogWriter.EnumTipoError.Informative);
                         currentMensaje = procesar.ProcesarCadena(cadenaTramaBruta.Trim());
-                        //AQUI LOG Insert Trama Sucia Procesada y se convierte en objeto Mensaje
                         logObjectTrama.LogWrite("Trama Sucia Procesada y se convierte en objeto Mensaje", LogWriter.EnumTipoError.Informative);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         //Aquí Log No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje
-                        logObjectTrama.LogWrite("Error, no fue posible Procesar Cadena de TramaSucia para convertirla a Mensaje", LogWriter.EnumTipoError.ErrTry);
-                        //Funciones.EscribeLog("No fue posible ProcesarCadena TramaSucia para convertirla a Mensaje", EventLogEntryType.Error);
+                        logObjectTrama.LogWrite("Error, no fue posible Procesar Cadena de TramaSucia para convertirla a Mensaje: " + ex.Message, LogWriter.EnumTipoError.ErrTry
+                                                , GetTextFromFile(tramaTargetFile.FullName));
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         logObjectTrama.LogWrite("La trama sucia se movió a carpeta errores, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.ErrTry);
                         continue;
@@ -220,7 +238,6 @@ namespace ServiceTramasMicros
                     {
                         //AQUI LOG Insert Trama se mueve por ser Ping o Version
                         logObjectTrama.LogWrite("Trama se mueve por ser Ping o Version", LogWriter.EnumTipoError.Informative);
-                        //Funciones.EscribeLog("Mover porque no es un Ticket", EventLogEntryType.Warning);
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         logObjectTrama.LogWrite("La trama sucia se movió a carpeta errores, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.Informative);
                         continue;
@@ -248,7 +265,8 @@ namespace ServiceTramasMicros
                     catch (Exception ex)
                     {
                         //Aquí Log Insert No fue posible ProcesarDatos o Generar Layout| Se incluye StackTrace
-                        logObjectTrama.LogWrite("No fue posible Procesar Datos o Generar Layout. " + ex.Message, LogWriter.EnumTipoError.ErrTry);
+                        logObjectTrama.LogWrite("No fue posible Procesar Datos o Generar Layout. " + ex.Message, LogWriter.EnumTipoError.ErrTry
+                                                , GetTextFromFile(tramaTargetFile.FullName), "", currentLayout);
                         string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         logObjectTrama.LogWrite("La trama sucia se movió a carpeta errores, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.ErrTry);
                         continue;
@@ -266,7 +284,8 @@ namespace ServiceTramasMicros
                         if (String.IsNullOrEmpty(identificador))
                         {
                             logObjectTrama.LogWrite("Error: " + "El id de la trama [" + idMicrosTrama + "]"
-                                              + " no fue localizado en el archivo de configuración; el TXT Trama Limpia o XML no será generado", LogWriter.EnumTipoError.Err);
+                                              + " no fue localizado en el archivo de configuración; el TXT Trama Limpia o XML no será generado", LogWriter.EnumTipoError.Err
+                                              , GetTextFromFile(tramaTargetFile.FullName), "", currentLayout);
                             string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDefinirRVCFullPath);//Se cambia la trama historica a DefinirRVC
                             logObjectTrama.LogWrite("La trama sucia se movió a carpeta DefinirRVC, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
                             continue;
@@ -281,10 +300,10 @@ namespace ServiceTramasMicros
                     }
                     catch (Exception ex)
                     {
-                        //Aquí Log Insert No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio| Se incluye StackTrace
                         logObjectTrama.LogWrite("Error: No fue posible Generar Layout Limpio o mover TramaSucia despues de haber creado el Layout limpio;"
-                                              + " Se incluye Detalle y StackTrace: "
-                                                 + ex.Message + "-" + ex.StackTrace, LogWriter.EnumTipoError.ErrTry);
+                                                 + " Se incluye Detalle y StackTrace: "
+                                                 + ex.Message + "-" + ex.StackTrace, LogWriter.EnumTipoError.ErrTry
+                                                 , GetTextFromFile(tramaTargetFile.FullName), "", currentLayout);
                         string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                         continue;
                     }
@@ -307,8 +326,8 @@ namespace ServiceTramasMicros
                                                         + emisorObject.rfc + "] e Identificador["
                                                         + identificador + "] para sucursal, fueron asignados al XML Doc. Fiscal, en memoria", LogWriter.EnumTipoError.Informative);
                                 logObjectTrama.LogWrite("Generando XML Doc. Fiscal", LogWriter.EnumTipoError.Informative);
-                                string fileNameFinal = GenerarXml(DocfiscalObject);
-                                logObjectTrama.LogWrite("XML Doc. Fiscal generado con ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Informative);
+                                string fileNameFinalXML = GenerarXml(DocfiscalObject);
+                                logObjectTrama.LogWrite("XML Doc. Fiscal generado con ruta completa [" + fileNameFinalXML + "]", LogWriter.EnumTipoError.Informative);
                             }
                             else
                             {
@@ -319,7 +338,8 @@ namespace ServiceTramasMicros
                         {
                             //AQUI LOG INSERT Error al generar objecto DocFiscal con los datos de la trama; el XML no será generado
                             logObjectTrama.LogWrite("Error al generar objecto DocFiscal con los datos de la trama; el XML no será generado."
-                                                     + "\nMás detalle: " + ex.Message, LogWriter.EnumTipoError.ErrTry);
+                                                     + "\nMás detalle: " + ex.Message, LogWriter.EnumTipoError.ErrTry
+                                                     , GetTextFromFile(tramaTargetFile.FullName), "", currentLayout);
                             string fileNameFinal = WorkerRole.MoverArchivo(tramaTargetFile.FullName, currentTramaErrorFullPath);
                             logObjectTrama.LogWrite("La trama sucia se movió a carpeta errores, en esta ruta[" + fileNameFinal + "]", LogWriter.EnumTipoError.ErrTry);
                             continue;
@@ -348,6 +368,7 @@ namespace ServiceTramasMicros
                 catch (Exception ex)
                 {
                     logEspecificoDia.LogWrite("Error al leer directorio tramas: " + ex.Message, LogWriter.EnumTipoError.ErrTry);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
                     continue;
                 }
 
@@ -368,6 +389,7 @@ namespace ServiceTramasMicros
                 catch (Exception ex)
                 {
                     logEspecificoDia.LogWrite("Error al leer lista de tramas: " + ex.Message, LogWriter.EnumTipoError.ErrTry);
+                    Thread.Sleep(TimeSleep);//Esperar antes de volver a iniciar
                     continue;
                 }
                 #endregion
@@ -384,12 +406,13 @@ namespace ServiceTramasMicros
                     string currentTramaNoFacturable = fullPathNoFacturable + currentNombreArchivo;
                     string currentTramaError = fullPathError + currentNombreArchivo;
                     string destinoTramaClon = "";
-                    string origenTramaClon = "";
+                    string origenTramaTXT = "";//solo se usa cuando se deba clonar
+                    string tramaTXTOrigen = cfn.TramasFolder + currentNombreArchivoNoExtension + ".txt";//se puede usar para buscar el TXT asociado a un Doc Fiscal
 
                     if (!String.IsNullOrEmpty(cfn.ClonarTramaFolder))
                     {
                         destinoTramaClon = cfn.ClonarTramaFolder + currentNombreArchivoNoExtension + ".txt";
-                        origenTramaClon = cfn.TramasFolder + currentNombreArchivoNoExtension + ".txt";
+                        origenTramaTXT = cfn.TramasFolder + currentNombreArchivoNoExtension + ".txt";
                     }
 
                     #endregion
@@ -403,7 +426,7 @@ namespace ServiceTramasMicros
                     logObjectTrama.LogWrite("Se crea log para trama con nombre de archivo [" + currentNombreArchivo + "]"
                                            , LogWriter.EnumTipoError.Important);
 
-                    Facto.endPointIntegracionResponse Respuesta = new Facto.endPointIntegracionResponse();
+                    FactoSender.Facto.endPointIntegracionResponse Respuesta = new FactoSender.Facto.endPointIntegracionResponse();
                     logObjectTrama.LogWrite("Se enviará a Facto", LogWriter.EnumTipoError.Important);
                     Respuesta = EnviarDatosFacto(tramaTargetFile.FullName, logObjectTrama);
                     string mensajeFacto = (Respuesta != null && Respuesta.mensaje != null ? Respuesta.mensaje : "");
@@ -411,7 +434,7 @@ namespace ServiceTramasMicros
                     {
                         logObjectTrama.LogWrite("La respuesta fue 100 Exito: " + mensajeFacto, LogWriter.EnumTipoError.Important);
                         #region Procesados
-                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, destinoTramaClon, logObjectTrama, origenTramaClon);
+                        string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaProcesado, destinoTramaClon, logObjectTrama, origenTramaTXT);
                         //AQUÍ LOG INSERT Trama Procesada con exito; Indicar el nombre con el que se guardó
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Important);
                         EnviarTramaANube(fileNameFinal, logObjectTrama);
@@ -420,8 +443,21 @@ namespace ServiceTramasMicros
                     }
                     else if (Respuesta.codigo == 200)
                     {
+                        #region obtenerLayout y si aplica XML
+                        Layout currentLayout = null;
+                        string xmlCadena = (cfn.FactoVersion == "DOCUMENTO_FISCAL" ? GetTextFromFile(tramaTargetFile.FullName) : "");
+                        try
+                        {
+                            ProcesaCadena procesar = new ProcesaCadena();
+                            currentLayout = procesar.GeneraLayoutFromTramaLimpia(tramaTXTOrigen);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        #endregion
                         #region Duplicados
-                        logObjectTrama.LogWrite("La respuesta fue 200 Duplicado: " + mensajeFacto, LogWriter.EnumTipoError.Err);
+                        logObjectTrama.LogWrite("La respuesta fue 200 Duplicado: " + mensajeFacto, LogWriter.EnumTipoError.Err
+                                                , GetTextFromFile(tramaTXTOrigen), xmlCadena, currentLayout);
                         string fileNameFinal = MoverArchivo(tramaTargetFile.FullName, currentTramaDuplicado, "", logObjectTrama);
                         //AQUÍ LOG INSERT Trama Duplicada; Indicar el nombre con el que se guardó
                         logObjectTrama.LogWrite("Archivo Trama se mueve a ruta completa [" + fileNameFinal + "]", LogWriter.EnumTipoError.Err);
@@ -430,15 +466,41 @@ namespace ServiceTramasMicros
                     }
                     else if (Respuesta.codigo == 400)
                     {
+                        #region obtenerLayout y si aplica XML
+                        Layout currentLayout = null;
+                        string xmlCadena = (cfn.FactoVersion == "DOCUMENTO_FISCAL" ? GetTextFromFile(tramaTargetFile.FullName) : "");
+                        try
+                        {
+                            ProcesaCadena procesar = new ProcesaCadena();
+                            currentLayout = procesar.GeneraLayoutFromTramaLimpia(tramaTXTOrigen);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        #endregion
                         #region Error comunicación con Facto
-                        logObjectTrama.LogWrite("La respuesta fue 400 Fallo Comunicación Facto, la trama no será movida."
-                                              + " Detalle: " + mensajeFacto, LogWriter.EnumTipoError.Err);
+                        logObjectTrama.LogWrite("La respuesta se marcó como [400 Fallo Comunicación Facto], la trama no será movida."
+                                              + " Detalle: " + mensajeFacto, LogWriter.EnumTipoError.Err
+                                              , GetTextFromFile(tramaTXTOrigen), xmlCadena, currentLayout);
                         continue;
                         #endregion
                     }
                     else if (!String.IsNullOrEmpty(mensajeFacto))
                     {
-                        logObjectTrama.LogWrite("La respuesta fue 300 Error: " + mensajeFacto, LogWriter.EnumTipoError.Err);
+                        #region obtenerLayout y si aplica XML
+                        Layout currentLayout = null;
+                        string xmlCadena = (cfn.FactoVersion == "DOCUMENTO_FISCAL" ? GetTextFromFile(tramaTargetFile.FullName) : "");
+                        try
+                        {
+                            ProcesaCadena procesar = new ProcesaCadena();
+                            currentLayout = procesar.GeneraLayoutFromTramaLimpia(tramaTXTOrigen);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        #endregion
+                        logObjectTrama.LogWrite("La respuesta fue 300 Error: " + mensajeFacto, LogWriter.EnumTipoError.Err
+                                                , GetTextFromFile(tramaTXTOrigen), xmlCadena, currentLayout);
                         #region DefinirRVC
                         if (Respuesta.mensaje.ToUpper().Contains(("No se encontró un Identificador").ToUpper())
                             || Respuesta.mensaje.ToUpper().Contains(("RVC").ToUpper())
@@ -755,18 +817,19 @@ namespace ServiceTramasMicros
         /// </summary>
         /// <param name="nombreArchivo">Ruta completa del archivo</param>
         /// <returns></returns>
-        public Facto.endPointIntegracionResponse EnviarDatosFacto(string nombreArchivo, LogWriter logObjectTrama)
+        public FactoSender.Facto.endPointIntegracionResponse EnviarDatosFacto(string nombreArchivo, LogWriter logObjectTrama)
         {
-            Facto.endPointIntegracionResponse respuesta = new Facto.endPointIntegracionResponse();
+            FactoSender.Facto.endPointIntegracionResponse respuesta = new FactoSender.Facto.endPointIntegracionResponse();
             try
             {
-                using (Facto.FactoEndPointsService servicio = new Facto.FactoEndPointsService())
+                using (FactoSender.Facto.FactoEndPointsService servicio = new FactoSender.Facto.FactoEndPointsService())
                 {
-                    Facto.endPointIntegracionRequest request = new Facto.endPointIntegracionRequest();
+                    FactoSender.Facto.endPointIntegracionRequest request = new FactoSender.Facto.endPointIntegracionRequest();
                     Emisor em = null;
-                    Facto.enumVersionCfdiIntegracion versionCfdi = (Facto.enumVersionCfdiIntegracion)System.Enum.Parse(typeof(Facto.enumVersionCfdiIntegracion), cfn.FactoVersion);
+                    FactoSender.Facto.enumVersionCfdiIntegracion versionCfdi =
+                            (FactoSender.Facto.enumVersionCfdiIntegracion)System.Enum.Parse(typeof(FactoSender.Facto.enumVersionCfdiIntegracion), cfn.FactoVersion);
 
-                    if (versionCfdi == Facto.enumVersionCfdiIntegracion.DOCUMENTO_FISCAL)
+                    if (versionCfdi == FactoSender.Facto.enumVersionCfdiIntegracion.DOCUMENTO_FISCAL)
                     {
                         logObjectTrama.LogWrite("La versión facto configurada es [" + versionCfdi + "]; Se intentará recuperar datos del emisor a partir del XML", LogWriter.EnumTipoError.Important);
                         em = GetEmisorFromXMLTrama(nombreArchivo);
@@ -778,14 +841,14 @@ namespace ServiceTramasMicros
                     }
                     logObjectTrama.LogWrite("Preparar Request", LogWriter.EnumTipoError.Important);
                     #region Información Emisor Facto
-                    request.emisor = new Facto.emisor();
+                    request.emisor = new FactoSender.Facto.emisor();
                     request.emisor.rfc = em.rfc;
                     #endregion
                     #region Información para Facto
-                    request.informacionFacto = new Facto.informacionFacto();
+                    request.informacionFacto = new FactoSender.Facto.informacionFacto();
                     request.informacionFacto.identificadorIntegracion = em.mapeoIDsList.FirstOrDefault().Value;
                     request.informacionFacto.foliosFacto = false;
-                    request.informacionFacto.integracion = Facto.enumIntegracion.MICROS;
+                    request.informacionFacto.integracion = FactoSender.Facto.enumIntegracion.MICROS;
                     request.informacionFacto.integracionSpecified = true;
                     request.informacionFacto.versionCfdi = versionCfdi;
                     request.informacionFacto.versionCfdiSpecified = true;
@@ -818,7 +881,7 @@ namespace ServiceTramasMicros
             }
             catch (System.Net.WebException exNetWeb)
             {
-                string netWebStatus = (exNetWeb.Status != null ? exNetWeb.Status.ToString() : "null");
+                string netWebStatus = (exNetWeb != null && exNetWeb.Status != null ? exNetWeb.Status.ToString() : "null");
                 string netWebInner = (exNetWeb.InnerException != null ? exNetWeb.InnerException.Message : "null");
                 string mensajeException = "Fallo de comunicación con Facto"
                                         + "; Detalle: " + exNetWeb.Message
@@ -978,6 +1041,41 @@ namespace ServiceTramasMicros
             }
             #endregion
         }
+        //private void EnviarTramaErrorANube(string errorFacto, string fileNameTXT, string fileNameXML, LogWriter logTramaTarget)
+        //{
+        //    #region Enviar trama erronea a la nube
+        //    try
+        //    {
+        //        string txtTargetString = "";
+        //        try
+        //        {
+        //            txtTargetString = File.ReadAllText(fileNameTXT);
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
+
+        //        string xmlTargetString = "";
+        //        try
+        //        {
+        //            xmlTargetString = File.ReadAllText(fileNameXML);
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
+
+        //        ProcesaCadena procesar = new ProcesaCadena();
+        //        Layout layoutTarget = procesar.GeneraLayoutFromTramaLimpia(fileNameTXT);
+        //        logTramaTarget.LogWrite("Se enviará trama erronea a la nube", LogWriter.EnumTipoError.Important);
+        //        logTramaTarget.SendErrorTramaToCloud(errorFacto, fileNameTXT, layoutTarget, xmlTargetString, txtTargetString, cfn.FactoVersion);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        logTramaTarget.LogWrite("Error al preparar archivos para enviar trama erronea a la nube con ruta [" + fileNameTXT + "]"
+        //                                , LogWriter.EnumTipoError.ErrTry);
+        //    }
+        //    #endregion
+        //}
         private void EnviarPing()
         {
             int minutosDiferencia = 5;
@@ -998,6 +1096,19 @@ namespace ServiceTramasMicros
                 LogWriter.SendPingToCloud(cfn.ClaveFacto, cfn.CentroConsumo);
                 fechaUltimoPing = DateTime.Now;
             }
+        }
+        private string GetTextFromFile(string fileNamePath)
+        {
+            string cadena = "";
+            try
+            {
+                cadena = File.ReadAllText(fileNamePath);
+            }
+            catch (Exception)
+            {
+                cadena = "SIN_PODER_LEER_ARCHIVO";
+            }
+            return cadena;
         }
     }
 }

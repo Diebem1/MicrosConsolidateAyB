@@ -8,12 +8,6 @@
       <xsd:import schemaLocation="http://hyatt33.factocloud.com.mx:80/facto/FactoEndPointsService?xsd=2" namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/" />
     </xsd:schema>
   </types>
-  <message name="generarCfdi">
-    <part name="parameters" element="tns:generarCfdi" />
-  </message>
-  <message name="generarCfdiResponse">
-    <part name="parameters" element="tns:generarCfdiResponse" />
-  </message>
   <message name="cancelarCfdi">
     <part name="parameters" element="tns:cancelarCfdi" />
   </message>
@@ -29,17 +23,23 @@
   <message name="cancelarCfdiExternoResponse">
     <part name="parameters" element="tns:cancelarCfdiExternoResponse" />
   </message>
-  <message name="procesarIntegracion">
-    <part name="parameters" element="tns:procesarIntegracion" />
+  <message name="generarCfdi">
+    <part name="parameters" element="tns:generarCfdi" />
   </message>
-  <message name="procesarIntegracionResponse">
-    <part name="parameters" element="tns:procesarIntegracionResponse" />
+  <message name="generarCfdiResponse">
+    <part name="parameters" element="tns:generarCfdiResponse" />
   </message>
   <message name="obtenerReceptor">
     <part name="parameters" element="tns:obtenerReceptor" />
   </message>
   <message name="obtenerReceptorResponse">
     <part name="parameters" element="tns:obtenerReceptorResponse" />
+  </message>
+  <message name="procesarIntegracion">
+    <part name="parameters" element="tns:procesarIntegracion" />
+  </message>
+  <message name="procesarIntegracionResponse">
+    <part name="parameters" element="tns:procesarIntegracionResponse" />
   </message>
   <message name="procesarTicket">
     <part name="parameters" element="tns:procesarTicket" />
@@ -48,10 +48,6 @@
     <part name="parameters" element="tns:procesarTicketResponse" />
   </message>
   <portType name="FactoEndPoints">
-    <operation name="generarCfdi">
-      <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/generarCfdiRequest" message="tns:generarCfdi" />
-      <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/generarCfdiResponse" message="tns:generarCfdiResponse" />
-    </operation>
     <operation name="cancelarCfdi">
       <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/cancelarCfdiRequest" message="tns:cancelarCfdi" />
       <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/cancelarCfdiResponse" message="tns:cancelarCfdiResponse" />
@@ -62,14 +58,18 @@
       <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/cancelarCfdiExternoResponse" message="tns:cancelarCfdiExternoResponse" />
       <fault wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/cancelarCfdiExterno/Fault/BusinessException" name="BusinessException" message="tns:BusinessException" />
     </operation>
-    <operation name="procesarIntegracion">
-      <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/procesarIntegracionRequest" message="tns:procesarIntegracion" />
-      <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/procesarIntegracionResponse" message="tns:procesarIntegracionResponse" />
+    <operation name="generarCfdi">
+      <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/generarCfdiRequest" message="tns:generarCfdi" />
+      <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/generarCfdiResponse" message="tns:generarCfdiResponse" />
     </operation>
     <operation name="obtenerReceptor">
       <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/obtenerReceptorRequest" message="tns:obtenerReceptor" />
       <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/obtenerReceptorResponse" message="tns:obtenerReceptorResponse" />
       <fault wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/obtenerReceptor/Fault/BusinessException" name="BusinessException" message="tns:BusinessException" />
+    </operation>
+    <operation name="procesarIntegracion">
+      <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/procesarIntegracionRequest" message="tns:procesarIntegracion" />
+      <output wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/procesarIntegracionResponse" message="tns:procesarIntegracionResponse" />
     </operation>
     <operation name="procesarTicket">
       <input wsam:Action="http://ejb.endpoint.hospitality.nexttech.mx.com/FactoEndPoints/procesarTicketRequest" message="tns:procesarTicket" />
@@ -78,15 +78,6 @@
   </portType>
   <binding name="FactoEndPointsPortBinding" type="tns:FactoEndPoints">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <operation name="generarCfdi">
-      <soap:operation soapAction="" />
-      <input>
-        <soap:body use="literal" />
-      </input>
-      <output>
-        <soap:body use="literal" />
-      </output>
-    </operation>
     <operation name="cancelarCfdi">
       <soap:operation soapAction="" />
       <input>
@@ -111,7 +102,7 @@
         <soap:fault use="literal" name="BusinessException" namespace="" />
       </fault>
     </operation>
-    <operation name="procesarIntegracion">
+    <operation name="generarCfdi">
       <soap:operation soapAction="" />
       <input>
         <soap:body use="literal" />
@@ -131,6 +122,15 @@
       <fault name="BusinessException">
         <soap:fault use="literal" name="BusinessException" namespace="" />
       </fault>
+    </operation>
+    <operation name="procesarIntegracion">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
     </operation>
     <operation name="procesarTicket">
       <soap:operation soapAction="" />

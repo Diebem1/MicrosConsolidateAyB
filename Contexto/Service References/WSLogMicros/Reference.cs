@@ -235,6 +235,14 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
         
         void EndInsertarLog(System.IAsyncResult result);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertaLogTrama", ReplyAction="http://tempuri.org/IService1/InsertaLogTramaResponse")]
+        void InsertaLogTrama(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/InsertaLogTrama", ReplyAction="http://tempuri.org/IService1/InsertaLogTramaResponse")]
+        System.IAsyncResult BeginInsertaLogTrama(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout, System.AsyncCallback callback, object asyncState);
+        
+        void EndInsertaLogTrama(System.IAsyncResult result);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertarTrama", ReplyAction="http://tempuri.org/IService1/InsertarTramaResponse")]
         void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML);
         
@@ -242,6 +250,14 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
         System.IAsyncResult BeginInsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML, System.AsyncCallback callback, object asyncState);
         
         void EndInsertarTrama(System.IAsyncResult result);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertaLogPuerto", ReplyAction="http://tempuri.org/IService1/InsertaLogPuertoResponse")]
+        void InsertaLogPuerto(string claveFacto, string centroConsumo, string error);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/IService1/InsertaLogPuerto", ReplyAction="http://tempuri.org/IService1/InsertaLogPuertoResponse")]
+        System.IAsyncResult BeginInsertaLogPuerto(string claveFacto, string centroConsumo, string error, System.AsyncCallback callback, object asyncState);
+        
+        void EndInsertaLogPuerto(System.IAsyncResult result);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/InsertaPing", ReplyAction="http://tempuri.org/IService1/InsertaPingResponse")]
         void InsertaPing(string clave);
@@ -318,11 +334,23 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
         
         private System.Threading.SendOrPostCallback onInsertarLogCompletedDelegate;
         
+        private BeginOperationDelegate onBeginInsertaLogTramaDelegate;
+        
+        private EndOperationDelegate onEndInsertaLogTramaDelegate;
+        
+        private System.Threading.SendOrPostCallback onInsertaLogTramaCompletedDelegate;
+        
         private BeginOperationDelegate onBeginInsertarTramaDelegate;
         
         private EndOperationDelegate onEndInsertarTramaDelegate;
         
         private System.Threading.SendOrPostCallback onInsertarTramaCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginInsertaLogPuertoDelegate;
+        
+        private EndOperationDelegate onEndInsertaLogPuertoDelegate;
+        
+        private System.Threading.SendOrPostCallback onInsertaLogPuertoCompletedDelegate;
         
         private BeginOperationDelegate onBeginInsertaPingDelegate;
         
@@ -359,7 +387,11 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertarLogCompleted;
         
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertaLogTramaCompleted;
+        
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertarTramaCompleted;
+        
+        public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertaLogPuertoCompleted;
         
         public event System.EventHandler<System.ComponentModel.AsyncCompletedEventArgs> InsertaPingCompleted;
         
@@ -476,6 +508,73 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
                         referencia_CI_CC}, this.onEndInsertarLogDelegate, this.onInsertarLogCompletedDelegate, userState);
         }
         
+        public void InsertaLogTrama(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout) {
+            base.Channel.InsertaLogTrama(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, tranaTxt, tramXml, layout);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginInsertaLogTrama(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginInsertaLogTrama(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, tranaTxt, tramXml, layout, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndInsertaLogTrama(System.IAsyncResult result) {
+            base.Channel.EndInsertaLogTrama(result);
+        }
+        
+        private System.IAsyncResult OnBeginInsertaLogTrama(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string claveFacto = ((string)(inValues[0]));
+            string centroConsumo = ((string)(inValues[1]));
+            string nombreFile = ((string)(inValues[2]));
+            string errorTry = ((string)(inValues[3]));
+            string error = ((string)(inValues[4]));
+            System.DateTime recordDate = ((System.DateTime)(inValues[5]));
+            string referencia_CI_CC = ((string)(inValues[6]));
+            string tranaTxt = ((string)(inValues[7]));
+            string tramXml = ((string)(inValues[8]));
+            ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout = ((ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama)(inValues[9]));
+            return this.BeginInsertaLogTrama(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, tranaTxt, tramXml, layout, callback, asyncState);
+        }
+        
+        private object[] OnEndInsertaLogTrama(System.IAsyncResult result) {
+            this.EndInsertaLogTrama(result);
+            return null;
+        }
+        
+        private void OnInsertaLogTramaCompleted(object state) {
+            if ((this.InsertaLogTramaCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.InsertaLogTramaCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void InsertaLogTramaAsync(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout) {
+            this.InsertaLogTramaAsync(claveFacto, centroConsumo, nombreFile, errorTry, error, recordDate, referencia_CI_CC, tranaTxt, tramXml, layout, null);
+        }
+        
+        public void InsertaLogTramaAsync(string claveFacto, string centroConsumo, string nombreFile, string errorTry, string error, System.DateTime recordDate, string referencia_CI_CC, string tranaTxt, string tramXml, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama layout, object userState) {
+            if ((this.onBeginInsertaLogTramaDelegate == null)) {
+                this.onBeginInsertaLogTramaDelegate = new BeginOperationDelegate(this.OnBeginInsertaLogTrama);
+            }
+            if ((this.onEndInsertaLogTramaDelegate == null)) {
+                this.onEndInsertaLogTramaDelegate = new EndOperationDelegate(this.OnEndInsertaLogTrama);
+            }
+            if ((this.onInsertaLogTramaCompletedDelegate == null)) {
+                this.onInsertaLogTramaCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnInsertaLogTramaCompleted);
+            }
+            base.InvokeAsync(this.onBeginInsertaLogTramaDelegate, new object[] {
+                        claveFacto,
+                        centroConsumo,
+                        nombreFile,
+                        errorTry,
+                        error,
+                        recordDate,
+                        referencia_CI_CC,
+                        tranaTxt,
+                        tramXml,
+                        layout}, this.onEndInsertaLogTramaDelegate, this.onInsertaLogTramaCompletedDelegate, userState);
+        }
+        
         public void InsertarTrama(string claveFacto, string centroConsumo, string nombreFile, ServiceTramasMicros.Model.WSLogMicros.EnviarLogTrama trama, System.DateTime recordDate, string referencia_CI_CC, string tramaXML) {
             base.Channel.InsertarTrama(claveFacto, centroConsumo, nombreFile, trama, recordDate, referencia_CI_CC, tramaXML);
         }
@@ -535,6 +634,59 @@ namespace ServiceTramasMicros.Model.WSLogMicros {
                         recordDate,
                         referencia_CI_CC,
                         tramaXML}, this.onEndInsertarTramaDelegate, this.onInsertarTramaCompletedDelegate, userState);
+        }
+        
+        public void InsertaLogPuerto(string claveFacto, string centroConsumo, string error) {
+            base.Channel.InsertaLogPuerto(claveFacto, centroConsumo, error);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginInsertaLogPuerto(string claveFacto, string centroConsumo, string error, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginInsertaLogPuerto(claveFacto, centroConsumo, error, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public void EndInsertaLogPuerto(System.IAsyncResult result) {
+            base.Channel.EndInsertaLogPuerto(result);
+        }
+        
+        private System.IAsyncResult OnBeginInsertaLogPuerto(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string claveFacto = ((string)(inValues[0]));
+            string centroConsumo = ((string)(inValues[1]));
+            string error = ((string)(inValues[2]));
+            return this.BeginInsertaLogPuerto(claveFacto, centroConsumo, error, callback, asyncState);
+        }
+        
+        private object[] OnEndInsertaLogPuerto(System.IAsyncResult result) {
+            this.EndInsertaLogPuerto(result);
+            return null;
+        }
+        
+        private void OnInsertaLogPuertoCompleted(object state) {
+            if ((this.InsertaLogPuertoCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.InsertaLogPuertoCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void InsertaLogPuertoAsync(string claveFacto, string centroConsumo, string error) {
+            this.InsertaLogPuertoAsync(claveFacto, centroConsumo, error, null);
+        }
+        
+        public void InsertaLogPuertoAsync(string claveFacto, string centroConsumo, string error, object userState) {
+            if ((this.onBeginInsertaLogPuertoDelegate == null)) {
+                this.onBeginInsertaLogPuertoDelegate = new BeginOperationDelegate(this.OnBeginInsertaLogPuerto);
+            }
+            if ((this.onEndInsertaLogPuertoDelegate == null)) {
+                this.onEndInsertaLogPuertoDelegate = new EndOperationDelegate(this.OnEndInsertaLogPuerto);
+            }
+            if ((this.onInsertaLogPuertoCompletedDelegate == null)) {
+                this.onInsertaLogPuertoCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnInsertaLogPuertoCompleted);
+            }
+            base.InvokeAsync(this.onBeginInsertaLogPuertoDelegate, new object[] {
+                        claveFacto,
+                        centroConsumo,
+                        error}, this.onEndInsertaLogPuertoDelegate, this.onInsertaLogPuertoCompletedDelegate, userState);
         }
         
         public void InsertaPing(string clave) {

@@ -20,7 +20,7 @@ namespace ServiceTramasMicros
         protected override void OnStart(string[] args)
         {
             workerRole._thread = new Thread(workerRole.WorkerThreadFunc);
-            workerRole._thread.Name = "Service Tramas Micros";
+            workerRole._thread.Name = "Facto Sender";
             workerRole._thread.IsBackground = true;
             workerRole._thread.Start();
         }
@@ -36,7 +36,7 @@ namespace ServiceTramasMicros
         {
             Console.WriteLine("Activado");
             workerRole._thread = new Thread(workerRole.WorkerThreadFunc);
-            workerRole._thread.Name = "Service Tramas Micros";
+            workerRole._thread.Name = "Facto Sender";
             workerRole._thread.IsBackground = true;
             workerRole._thread.Start();
         }

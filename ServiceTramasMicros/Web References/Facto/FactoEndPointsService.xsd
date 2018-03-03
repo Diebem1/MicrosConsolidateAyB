@@ -51,57 +51,6 @@
       <xs:element minOccurs="0" name="serverMessage" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="procesarIntegracion">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="integracionRequest" type="tns:endPointIntegracionRequest" />
-      <xs:element minOccurs="0" name="apiKey" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="endPointIntegracionRequest">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="emisor" type="tns:emisor" />
-      <xs:element minOccurs="0" name="file" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="informacionFacto" type="tns:informacionFacto" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="emisor">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="rfc" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="informacionFacto">
-    <xs:sequence>
-      <xs:element name="facturaAutomatica" type="xs:boolean" />
-      <xs:element name="foliosFacto" type="xs:boolean" />
-      <xs:element minOccurs="0" name="identificadorIntegracion" type="xs:string" />
-      <xs:element minOccurs="0" name="idiomaPdfId" type="xs:int" />
-      <xs:element name="imprimir" type="xs:boolean" />
-      <xs:element minOccurs="0" name="integracion" type="tns:enumIntegracion" />
-      <xs:element minOccurs="0" name="tipoPdf" type="tns:enumTipoPdf" />
-      <xs:element minOccurs="0" name="versionCfdi" type="tns:enumVersionCfdiIntegracion" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="procesarIntegracionResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:endPointIntegracionResponse" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="endPointIntegracionResponse">
-    <xs:sequence>
-      <xs:element name="facturado" type="xs:boolean" />
-      <xs:element name="codigo" type="xs:int" />
-      <xs:element minOccurs="0" name="mensaje" type="xs:string" />
-      <xs:element minOccurs="0" name="xml" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="pdf" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="nombreArchivo" type="xs:string" />
-      <xs:element minOccurs="0" name="file" type="xs:base64Binary" />
-      <xs:element minOccurs="0" name="otraInformacion" type="xs:string" />
-      <xs:element minOccurs="0" name="fechaTimbrado" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="serie" type="xs:string" />
-      <xs:element minOccurs="0" name="folio" type="xs:string" />
-      <xs:element minOccurs="0" name="uuid" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
   <xs:complexType name="obtenerReceptor">
     <xs:sequence>
       <xs:element minOccurs="0" name="request" type="tns:endPointReceptorRequest" />
@@ -113,6 +62,11 @@
       <xs:element minOccurs="0" name="identificadorIntegracion" type="xs:string" />
       <xs:element minOccurs="0" name="integracion" type="tns:enumIntegracion" />
       <xs:element minOccurs="0" name="rfcReceptor" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="emisor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="rfc" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerReceptorResponse">
@@ -149,6 +103,52 @@
       <xs:element minOccurs="0" name="noExterior" type="xs:string" />
       <xs:element minOccurs="0" name="noInterior" type="xs:string" />
       <xs:element minOccurs="0" name="pais" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="procesarIntegracion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="integracionRequest" type="tns:endPointIntegracionRequest" />
+      <xs:element minOccurs="0" name="apiKey" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="endPointIntegracionRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="emisor" type="tns:emisor" />
+      <xs:element minOccurs="0" name="file" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="informacionFacto" type="tns:informacionFacto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="informacionFacto">
+    <xs:sequence>
+      <xs:element name="facturaAutomatica" type="xs:boolean" />
+      <xs:element name="foliosFacto" type="xs:boolean" />
+      <xs:element minOccurs="0" name="identificadorIntegracion" type="xs:string" />
+      <xs:element minOccurs="0" name="idiomaPdfId" type="xs:int" />
+      <xs:element name="imprimir" type="xs:boolean" />
+      <xs:element minOccurs="0" name="integracion" type="tns:enumIntegracion" />
+      <xs:element minOccurs="0" name="tipoPdf" type="tns:enumTipoPdf" />
+      <xs:element minOccurs="0" name="versionCfdi" type="tns:enumVersionCfdiIntegracion" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="procesarIntegracionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:endPointIntegracionResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="endPointIntegracionResponse">
+    <xs:sequence>
+      <xs:element name="facturado" type="xs:boolean" />
+      <xs:element name="codigo" type="xs:int" />
+      <xs:element minOccurs="0" name="mensaje" type="xs:string" />
+      <xs:element minOccurs="0" name="xml" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="pdf" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="nombreArchivo" type="xs:string" />
+      <xs:element minOccurs="0" name="file" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="otraInformacion" type="xs:string" />
+      <xs:element minOccurs="0" name="fechaTimbrado" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="serie" type="xs:string" />
+      <xs:element minOccurs="0" name="folio" type="xs:string" />
+      <xs:element minOccurs="0" name="uuid" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="cancelarCfdi">
@@ -589,7 +589,9 @@
       <xs:element minOccurs="0" name="fecha" type="xs:dateTime" />
       <xs:element minOccurs="0" name="folio" type="xs:string" />
       <xs:element minOccurs="0" name="moneda" type="tns:monedaMabe" />
+      <xs:element minOccurs="0" name="ordenCompra" type="xs:string" />
       <xs:element minOccurs="0" name="proveedor" type="tns:proveedorMabe" />
+      <xs:element minOccurs="0" name="referencia1" type="xs:string" />
       <xs:element minOccurs="0" name="retenciones" type="tns:retencionesMabe" />
       <xs:element minOccurs="0" name="subtotal" type="tns:subtotalMabe" />
       <xs:element minOccurs="0" name="tipoDocumento" type="tns:tipoDocumentoMabe" />
@@ -1028,7 +1030,8 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="MXN" />
       <xs:enumeration value="USD" />
-      <xs:enumeration value="XEU" />
+      <xs:enumeration value="YEN" />
+      <xs:enumeration value="VEF" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="tipoDocumentoMabe">
@@ -1054,9 +1057,9 @@
   </xs:simpleType>
   <xs:simpleType name="division">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="FA" />
-      <xs:enumeration value="CA" />
-      <xs:enumeration value="CR" />
+      <xs:enumeration value="VW" />
+      <xs:enumeration value="INFODE" />
+      <xs:enumeration value="VWSP" />
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="tipoDocumentoVW">

@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace ServiceTramasMicros.Facto {
+namespace FactoSender.Facto {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -29,15 +29,15 @@ namespace ServiceTramasMicros.Facto {
     [System.Web.Services.WebServiceBindingAttribute(Name="FactoEndPointsPortBinding", Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
     public partial class FactoEndPointsService : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
-        private System.Threading.SendOrPostCallback generarCfdiOperationCompleted;
-        
         private System.Threading.SendOrPostCallback cancelarCfdiOperationCompleted;
         
         private System.Threading.SendOrPostCallback cancelarCfdiExternoOperationCompleted;
         
-        private System.Threading.SendOrPostCallback procesarIntegracionOperationCompleted;
+        private System.Threading.SendOrPostCallback generarCfdiOperationCompleted;
         
         private System.Threading.SendOrPostCallback obtenerReceptorOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback procesarIntegracionOperationCompleted;
         
         private System.Threading.SendOrPostCallback procesarTicketOperationCompleted;
         
@@ -45,7 +45,7 @@ namespace ServiceTramasMicros.Facto {
         
         /// <remarks/>
         public FactoEndPointsService() {
-            this.Url = global::ServiceTramasMicros.Properties.Settings.Default.ServiceTramasMicros_Facto_FactoEndPointsService;
+            this.Url = global::FactoSender.Properties.Settings.Default.FactoSender_Facto_FactoEndPointsService;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -80,54 +80,22 @@ namespace ServiceTramasMicros.Facto {
         }
         
         /// <remarks/>
-        public event generarCfdiCompletedEventHandler generarCfdiCompleted;
-        
-        /// <remarks/>
         public event cancelarCfdiCompletedEventHandler cancelarCfdiCompleted;
         
         /// <remarks/>
         public event cancelarCfdiExternoCompletedEventHandler cancelarCfdiExternoCompleted;
         
         /// <remarks/>
-        public event procesarIntegracionCompletedEventHandler procesarIntegracionCompleted;
+        public event generarCfdiCompletedEventHandler generarCfdiCompleted;
         
         /// <remarks/>
         public event obtenerReceptorCompletedEventHandler obtenerReceptorCompleted;
         
         /// <remarks/>
+        public event procesarIntegracionCompletedEventHandler procesarIntegracionCompleted;
+        
+        /// <remarks/>
         public event procesarTicketCompletedEventHandler procesarTicketCompleted;
-        
-        /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", ResponseNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute("return", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public endPointCfdiResponse generarCfdi([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] EndPointRequest request, [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string apikey) {
-            object[] results = this.Invoke("generarCfdi", new object[] {
-                        request,
-                        apikey});
-            return ((endPointCfdiResponse)(results[0]));
-        }
-        
-        /// <remarks/>
-        public void generarCfdiAsync(EndPointRequest request, string apikey) {
-            this.generarCfdiAsync(request, apikey, null);
-        }
-        
-        /// <remarks/>
-        public void generarCfdiAsync(EndPointRequest request, string apikey, object userState) {
-            if ((this.generarCfdiOperationCompleted == null)) {
-                this.generarCfdiOperationCompleted = new System.Threading.SendOrPostCallback(this.OngenerarCfdiOperationCompleted);
-            }
-            this.InvokeAsync("generarCfdi", new object[] {
-                        request,
-                        apikey}, this.generarCfdiOperationCompleted, userState);
-        }
-        
-        private void OngenerarCfdiOperationCompleted(object arg) {
-            if ((this.generarCfdiCompleted != null)) {
-                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.generarCfdiCompleted(this, new generarCfdiCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
-            }
-        }
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", ResponseNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
@@ -198,32 +166,32 @@ namespace ServiceTramasMicros.Facto {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", ResponseNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("return", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public endPointIntegracionResponse procesarIntegracion([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] endPointIntegracionRequest integracionRequest, [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string apiKey) {
-            object[] results = this.Invoke("procesarIntegracion", new object[] {
-                        integracionRequest,
-                        apiKey});
-            return ((endPointIntegracionResponse)(results[0]));
+        public endPointCfdiResponse generarCfdi([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] EndPointRequest request, [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string apikey) {
+            object[] results = this.Invoke("generarCfdi", new object[] {
+                        request,
+                        apikey});
+            return ((endPointCfdiResponse)(results[0]));
         }
         
         /// <remarks/>
-        public void procesarIntegracionAsync(endPointIntegracionRequest integracionRequest, string apiKey) {
-            this.procesarIntegracionAsync(integracionRequest, apiKey, null);
+        public void generarCfdiAsync(EndPointRequest request, string apikey) {
+            this.generarCfdiAsync(request, apikey, null);
         }
         
         /// <remarks/>
-        public void procesarIntegracionAsync(endPointIntegracionRequest integracionRequest, string apiKey, object userState) {
-            if ((this.procesarIntegracionOperationCompleted == null)) {
-                this.procesarIntegracionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnprocesarIntegracionOperationCompleted);
+        public void generarCfdiAsync(EndPointRequest request, string apikey, object userState) {
+            if ((this.generarCfdiOperationCompleted == null)) {
+                this.generarCfdiOperationCompleted = new System.Threading.SendOrPostCallback(this.OngenerarCfdiOperationCompleted);
             }
-            this.InvokeAsync("procesarIntegracion", new object[] {
-                        integracionRequest,
-                        apiKey}, this.procesarIntegracionOperationCompleted, userState);
+            this.InvokeAsync("generarCfdi", new object[] {
+                        request,
+                        apikey}, this.generarCfdiOperationCompleted, userState);
         }
         
-        private void OnprocesarIntegracionOperationCompleted(object arg) {
-            if ((this.procesarIntegracionCompleted != null)) {
+        private void OngenerarCfdiOperationCompleted(object arg) {
+            if ((this.generarCfdiCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.procesarIntegracionCompleted(this, new procesarIntegracionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+                this.generarCfdiCompleted(this, new generarCfdiCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -254,6 +222,38 @@ namespace ServiceTramasMicros.Facto {
             if ((this.obtenerReceptorCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.obtenerReceptorCompleted(this, new obtenerReceptorCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("", RequestNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", ResponseNamespace="http://ejb.endpoint.hospitality.nexttech.mx.com/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("return", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public endPointIntegracionResponse procesarIntegracion([System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] endPointIntegracionRequest integracionRequest, [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)] string apiKey) {
+            object[] results = this.Invoke("procesarIntegracion", new object[] {
+                        integracionRequest,
+                        apiKey});
+            return ((endPointIntegracionResponse)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void procesarIntegracionAsync(endPointIntegracionRequest integracionRequest, string apiKey) {
+            this.procesarIntegracionAsync(integracionRequest, apiKey, null);
+        }
+        
+        /// <remarks/>
+        public void procesarIntegracionAsync(endPointIntegracionRequest integracionRequest, string apiKey, object userState) {
+            if ((this.procesarIntegracionOperationCompleted == null)) {
+                this.procesarIntegracionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnprocesarIntegracionOperationCompleted);
+            }
+            this.InvokeAsync("procesarIntegracion", new object[] {
+                        integracionRequest,
+                        apiKey}, this.procesarIntegracionOperationCompleted, userState);
+        }
+        
+        private void OnprocesarIntegracionOperationCompleted(object arg) {
+            if ((this.procesarIntegracionCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.procesarIntegracionCompleted(this, new procesarIntegracionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
@@ -314,570 +314,31 @@ namespace ServiceTramasMicros.Facto {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class EndPointRequest {
+    public partial class endPointCancelacionRequest {
         
-        private Cfdi cfdiField;
+        private string rfcField;
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public Cfdi cfdi {
-            get {
-                return this.cfdiField;
-            }
-            set {
-                this.cfdiField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class Cfdi {
-        
-        private string serieField;
-        
-        private string folioField;
-        
-        private System.DateTime fechaField;
-        
-        private bool fechaFieldSpecified;
-        
-        private formaPago formaPagoField;
-        
-        private string condicionesDePagoField;
-        
-        private decimal granTotalField;
-        
-        private bool granTotalFieldSpecified;
-        
-        private decimal totalField;
-        
-        private bool totalFieldSpecified;
-        
-        private decimal subTotalField;
-        
-        private bool subTotalFieldSpecified;
-        
-        private decimal descuentoField;
-        
-        private bool descuentoFieldSpecified;
-        
-        private string notasField;
-        
-        private string monedaField;
-        
-        private decimal tipoCambioField;
-        
-        private bool tipoCambioFieldSpecified;
-        
-        private string lugarExpedicionField;
-        
-        private string confirmacionField;
-        
-        private enumTipoCfdi tipoCfdiField;
-        
-        private bool tipoCfdiFieldSpecified;
-        
-        private string metodoPagoField;
-        
-        private cargoNoFacturable[] cargosNoFacturablesField;
-        
-        private relacionados cfdiRelacionadosField;
-        
-        private emisor emisorField;
-        
-        private receptor receptorField;
-        
-        private conceptos[] conceptosField;
-        
-        private impuestos impuestosField;
-        
-        private Hospedaje[] hospedajeField;
-        
-        private Alimentos[] alimentosField;
-        
-        private Complementos complementosField;
-        
-        private impuestosLocales impuestosLocalesField;
-        
-        private addendas addendasField;
-        
-        private complexType[] adendaField;
-        
-        private string xmlAddendaField;
-        
-        private InformacionAdicional informacionAdicionalField;
-        
-        private informacionFacto informacionFactoField;
+        private string[] uuidField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string serie {
+        public string rfc {
             get {
-                return this.serieField;
+                return this.rfcField;
             }
             set {
-                this.serieField = value;
+                this.rfcField = value;
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string folio {
+        [System.Xml.Serialization.XmlElementAttribute("uuid", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public string[] uuid {
             get {
-                return this.folioField;
+                return this.uuidField;
             }
             set {
-                this.folioField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public System.DateTime fecha {
-            get {
-                return this.fechaField;
-            }
-            set {
-                this.fechaField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool fechaSpecified {
-            get {
-                return this.fechaFieldSpecified;
-            }
-            set {
-                this.fechaFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public formaPago formaPago {
-            get {
-                return this.formaPagoField;
-            }
-            set {
-                this.formaPagoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string condicionesDePago {
-            get {
-                return this.condicionesDePagoField;
-            }
-            set {
-                this.condicionesDePagoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal granTotal {
-            get {
-                return this.granTotalField;
-            }
-            set {
-                this.granTotalField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool granTotalSpecified {
-            get {
-                return this.granTotalFieldSpecified;
-            }
-            set {
-                this.granTotalFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal total {
-            get {
-                return this.totalField;
-            }
-            set {
-                this.totalField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool totalSpecified {
-            get {
-                return this.totalFieldSpecified;
-            }
-            set {
-                this.totalFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal subTotal {
-            get {
-                return this.subTotalField;
-            }
-            set {
-                this.subTotalField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool subTotalSpecified {
-            get {
-                return this.subTotalFieldSpecified;
-            }
-            set {
-                this.subTotalFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal descuento {
-            get {
-                return this.descuentoField;
-            }
-            set {
-                this.descuentoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool descuentoSpecified {
-            get {
-                return this.descuentoFieldSpecified;
-            }
-            set {
-                this.descuentoFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string notas {
-            get {
-                return this.notasField;
-            }
-            set {
-                this.notasField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string moneda {
-            get {
-                return this.monedaField;
-            }
-            set {
-                this.monedaField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal tipoCambio {
-            get {
-                return this.tipoCambioField;
-            }
-            set {
-                this.tipoCambioField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool tipoCambioSpecified {
-            get {
-                return this.tipoCambioFieldSpecified;
-            }
-            set {
-                this.tipoCambioFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string lugarExpedicion {
-            get {
-                return this.lugarExpedicionField;
-            }
-            set {
-                this.lugarExpedicionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string confirmacion {
-            get {
-                return this.confirmacionField;
-            }
-            set {
-                this.confirmacionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public enumTipoCfdi tipoCfdi {
-            get {
-                return this.tipoCfdiField;
-            }
-            set {
-                this.tipoCfdiField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool tipoCfdiSpecified {
-            get {
-                return this.tipoCfdiFieldSpecified;
-            }
-            set {
-                this.tipoCfdiFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string metodoPago {
-            get {
-                return this.metodoPagoField;
-            }
-            set {
-                this.metodoPagoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("cargosNoFacturables", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public cargoNoFacturable[] cargosNoFacturables {
-            get {
-                return this.cargosNoFacturablesField;
-            }
-            set {
-                this.cargosNoFacturablesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public relacionados cfdiRelacionados {
-            get {
-                return this.cfdiRelacionadosField;
-            }
-            set {
-                this.cfdiRelacionadosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public emisor emisor {
-            get {
-                return this.emisorField;
-            }
-            set {
-                this.emisorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public receptor receptor {
-            get {
-                return this.receptorField;
-            }
-            set {
-                this.receptorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("conceptos", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public conceptos[] conceptos {
-            get {
-                return this.conceptosField;
-            }
-            set {
-                this.conceptosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public impuestos impuestos {
-            get {
-                return this.impuestosField;
-            }
-            set {
-                this.impuestosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("hospedaje", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public Hospedaje[] hospedaje {
-            get {
-                return this.hospedajeField;
-            }
-            set {
-                this.hospedajeField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("alimentos", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public Alimentos[] alimentos {
-            get {
-                return this.alimentosField;
-            }
-            set {
-                this.alimentosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public Complementos complementos {
-            get {
-                return this.complementosField;
-            }
-            set {
-                this.complementosField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public impuestosLocales impuestosLocales {
-            get {
-                return this.impuestosLocalesField;
-            }
-            set {
-                this.impuestosLocalesField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public addendas addendas {
-            get {
-                return this.addendasField;
-            }
-            set {
-                this.addendasField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        [System.Xml.Serialization.XmlArrayItemAttribute("complexElement", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public complexType[] adenda {
-            get {
-                return this.adendaField;
-            }
-            set {
-                this.adendaField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string xmlAddenda {
-            get {
-                return this.xmlAddendaField;
-            }
-            set {
-                this.xmlAddendaField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public InformacionAdicional informacionAdicional {
-            get {
-                return this.informacionAdicionalField;
-            }
-            set {
-                this.informacionAdicionalField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public informacionFacto informacionFacto {
-            get {
-                return this.informacionFactoField;
-            }
-            set {
-                this.informacionFactoField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class formaPago {
-        
-        private string formaPago1Field;
-        
-        private decimal montoField;
-        
-        private bool montoFieldSpecified;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("formaPago", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string formaPago1 {
-            get {
-                return this.formaPago1Field;
-            }
-            set {
-                this.formaPago1Field = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public decimal monto {
-            get {
-                return this.montoField;
-            }
-            set {
-                this.montoField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool montoSpecified {
-            get {
-                return this.montoFieldSpecified;
-            }
-            set {
-                this.montoFieldSpecified = value;
+                this.uuidField = value;
             }
         }
     }
@@ -1225,6 +686,54 @@ namespace ServiceTramasMicros.Facto {
             }
             set {
                 this.impuestosLocalesField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
+    public partial class formaPago {
+        
+        private string formaPago1Field;
+        
+        private decimal montoField;
+        
+        private bool montoFieldSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("formaPago", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string formaPago1 {
+            get {
+                return this.formaPago1Field;
+            }
+            set {
+                this.formaPago1Field = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal monto {
+            get {
+                return this.montoField;
+            }
+            set {
+                this.montoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool montoSpecified {
+            get {
+                return this.montoFieldSpecified;
+            }
+            set {
+                this.montoFieldSpecified = value;
             }
         }
     }
@@ -3280,80 +2789,6 @@ namespace ServiceTramasMicros.Facto {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class endPointReceptorRequest {
-        
-        private emisor emisorField;
-        
-        private string identificadorIntegracionField;
-        
-        private enumIntegracion integracionField;
-        
-        private bool integracionFieldSpecified;
-        
-        private string rfcReceptorField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public emisor emisor {
-            get {
-                return this.emisorField;
-            }
-            set {
-                this.emisorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string identificadorIntegracion {
-            get {
-                return this.identificadorIntegracionField;
-            }
-            set {
-                this.identificadorIntegracionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public enumIntegracion integracion {
-            get {
-                return this.integracionField;
-            }
-            set {
-                this.integracionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool integracionSpecified {
-            get {
-                return this.integracionFieldSpecified;
-            }
-            set {
-                this.integracionFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string rfcReceptor {
-            get {
-                return this.rfcReceptorField;
-            }
-            set {
-                this.rfcReceptorField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
     public partial class endPointIntegracionResponse {
         
         private bool facturadoField;
@@ -3580,79 +3015,70 @@ namespace ServiceTramasMicros.Facto {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class uuidResponse {
+    public partial class endPointReceptorRequest {
         
-        private bool canceladoField;
+        private emisor emisorField;
         
-        private string mensajeField;
+        private string identificadorIntegracionField;
         
-        private string uuidField;
+        private enumIntegracion integracionField;
+        
+        private bool integracionFieldSpecified;
+        
+        private string rfcReceptorField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public bool cancelado {
+        public emisor emisor {
             get {
-                return this.canceladoField;
+                return this.emisorField;
             }
             set {
-                this.canceladoField = value;
+                this.emisorField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string mensaje {
+        public string identificadorIntegracion {
             get {
-                return this.mensajeField;
+                return this.identificadorIntegracionField;
             }
             set {
-                this.mensajeField = value;
+                this.identificadorIntegracionField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string uuid {
+        public enumIntegracion integracion {
             get {
-                return this.uuidField;
+                return this.integracionField;
             }
             set {
-                this.uuidField = value;
+                this.integracionField = value;
             }
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
-    public partial class endPointCancelacionRequest {
         
-        private string rfcField;
-        
-        private string[] uuidField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool integracionSpecified {
+            get {
+                return this.integracionFieldSpecified;
+            }
+            set {
+                this.integracionFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string rfc {
+        public string rfcReceptor {
             get {
-                return this.rfcField;
+                return this.rfcReceptorField;
             }
             set {
-                this.rfcField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("uuid", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
-        public string[] uuid {
-            get {
-                return this.uuidField;
-            }
-            set {
-                this.uuidField = value;
+                this.rfcReceptorField = value;
             }
         }
     }
@@ -5050,13 +4476,13 @@ namespace ServiceTramasMicros.Facto {
     public enum division {
         
         /// <remarks/>
-        FA,
+        VW,
         
         /// <remarks/>
-        CA,
+        INFODE,
         
         /// <remarks/>
-        CR,
+        VWSP,
     }
     
     /// <remarks/>
@@ -6379,7 +5805,10 @@ namespace ServiceTramasMicros.Facto {
         USD,
         
         /// <remarks/>
-        XEU,
+        YEN,
+        
+        /// <remarks/>
+        VEF,
     }
     
     /// <remarks/>
@@ -6678,7 +6107,11 @@ namespace ServiceTramasMicros.Facto {
         
         private monedaMabe monedaField;
         
+        private string ordenCompraField;
+        
         private proveedorMabe proveedorField;
+        
+        private string referencia1Field;
         
         private retencionMabe[] retencionesField;
         
@@ -6774,12 +6207,34 @@ namespace ServiceTramasMicros.Facto {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string ordenCompra {
+            get {
+                return this.ordenCompraField;
+            }
+            set {
+                this.ordenCompraField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public proveedorMabe proveedor {
             get {
                 return this.proveedorField;
             }
             set {
                 this.proveedorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string referencia1 {
+            get {
+                return this.referencia1Field;
+            }
+            set {
+                this.referencia1Field = value;
             }
         }
         
@@ -8802,6 +8257,510 @@ namespace ServiceTramasMicros.Facto {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
     [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
+    public partial class Cfdi {
+        
+        private string serieField;
+        
+        private string folioField;
+        
+        private System.DateTime fechaField;
+        
+        private bool fechaFieldSpecified;
+        
+        private formaPago formaPagoField;
+        
+        private string condicionesDePagoField;
+        
+        private decimal granTotalField;
+        
+        private bool granTotalFieldSpecified;
+        
+        private decimal totalField;
+        
+        private bool totalFieldSpecified;
+        
+        private decimal subTotalField;
+        
+        private bool subTotalFieldSpecified;
+        
+        private decimal descuentoField;
+        
+        private bool descuentoFieldSpecified;
+        
+        private string notasField;
+        
+        private string monedaField;
+        
+        private decimal tipoCambioField;
+        
+        private bool tipoCambioFieldSpecified;
+        
+        private string lugarExpedicionField;
+        
+        private string confirmacionField;
+        
+        private enumTipoCfdi tipoCfdiField;
+        
+        private bool tipoCfdiFieldSpecified;
+        
+        private string metodoPagoField;
+        
+        private cargoNoFacturable[] cargosNoFacturablesField;
+        
+        private relacionados cfdiRelacionadosField;
+        
+        private emisor emisorField;
+        
+        private receptor receptorField;
+        
+        private conceptos[] conceptosField;
+        
+        private impuestos impuestosField;
+        
+        private Hospedaje[] hospedajeField;
+        
+        private Alimentos[] alimentosField;
+        
+        private Complementos complementosField;
+        
+        private impuestosLocales impuestosLocalesField;
+        
+        private addendas addendasField;
+        
+        private complexType[] adendaField;
+        
+        private string xmlAddendaField;
+        
+        private InformacionAdicional informacionAdicionalField;
+        
+        private informacionFacto informacionFactoField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string serie {
+            get {
+                return this.serieField;
+            }
+            set {
+                this.serieField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string folio {
+            get {
+                return this.folioField;
+            }
+            set {
+                this.folioField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public System.DateTime fecha {
+            get {
+                return this.fechaField;
+            }
+            set {
+                this.fechaField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool fechaSpecified {
+            get {
+                return this.fechaFieldSpecified;
+            }
+            set {
+                this.fechaFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public formaPago formaPago {
+            get {
+                return this.formaPagoField;
+            }
+            set {
+                this.formaPagoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string condicionesDePago {
+            get {
+                return this.condicionesDePagoField;
+            }
+            set {
+                this.condicionesDePagoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal granTotal {
+            get {
+                return this.granTotalField;
+            }
+            set {
+                this.granTotalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool granTotalSpecified {
+            get {
+                return this.granTotalFieldSpecified;
+            }
+            set {
+                this.granTotalFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal total {
+            get {
+                return this.totalField;
+            }
+            set {
+                this.totalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool totalSpecified {
+            get {
+                return this.totalFieldSpecified;
+            }
+            set {
+                this.totalFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal subTotal {
+            get {
+                return this.subTotalField;
+            }
+            set {
+                this.subTotalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool subTotalSpecified {
+            get {
+                return this.subTotalFieldSpecified;
+            }
+            set {
+                this.subTotalFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal descuento {
+            get {
+                return this.descuentoField;
+            }
+            set {
+                this.descuentoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool descuentoSpecified {
+            get {
+                return this.descuentoFieldSpecified;
+            }
+            set {
+                this.descuentoFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string notas {
+            get {
+                return this.notasField;
+            }
+            set {
+                this.notasField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string moneda {
+            get {
+                return this.monedaField;
+            }
+            set {
+                this.monedaField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public decimal tipoCambio {
+            get {
+                return this.tipoCambioField;
+            }
+            set {
+                this.tipoCambioField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool tipoCambioSpecified {
+            get {
+                return this.tipoCambioFieldSpecified;
+            }
+            set {
+                this.tipoCambioFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string lugarExpedicion {
+            get {
+                return this.lugarExpedicionField;
+            }
+            set {
+                this.lugarExpedicionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string confirmacion {
+            get {
+                return this.confirmacionField;
+            }
+            set {
+                this.confirmacionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public enumTipoCfdi tipoCfdi {
+            get {
+                return this.tipoCfdiField;
+            }
+            set {
+                this.tipoCfdiField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool tipoCfdiSpecified {
+            get {
+                return this.tipoCfdiFieldSpecified;
+            }
+            set {
+                this.tipoCfdiFieldSpecified = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string metodoPago {
+            get {
+                return this.metodoPagoField;
+            }
+            set {
+                this.metodoPagoField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("cargosNoFacturables", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public cargoNoFacturable[] cargosNoFacturables {
+            get {
+                return this.cargosNoFacturablesField;
+            }
+            set {
+                this.cargosNoFacturablesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public relacionados cfdiRelacionados {
+            get {
+                return this.cfdiRelacionadosField;
+            }
+            set {
+                this.cfdiRelacionadosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public emisor emisor {
+            get {
+                return this.emisorField;
+            }
+            set {
+                this.emisorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public receptor receptor {
+            get {
+                return this.receptorField;
+            }
+            set {
+                this.receptorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("conceptos", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public conceptos[] conceptos {
+            get {
+                return this.conceptosField;
+            }
+            set {
+                this.conceptosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public impuestos impuestos {
+            get {
+                return this.impuestosField;
+            }
+            set {
+                this.impuestosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("hospedaje", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public Hospedaje[] hospedaje {
+            get {
+                return this.hospedajeField;
+            }
+            set {
+                this.hospedajeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("alimentos", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true)]
+        public Alimentos[] alimentos {
+            get {
+                return this.alimentosField;
+            }
+            set {
+                this.alimentosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public Complementos complementos {
+            get {
+                return this.complementosField;
+            }
+            set {
+                this.complementosField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public impuestosLocales impuestosLocales {
+            get {
+                return this.impuestosLocalesField;
+            }
+            set {
+                this.impuestosLocalesField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public addendas addendas {
+            get {
+                return this.addendasField;
+            }
+            set {
+                this.addendasField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("complexElement", Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public complexType[] adenda {
+            get {
+                return this.adendaField;
+            }
+            set {
+                this.adendaField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string xmlAddenda {
+            get {
+                return this.xmlAddendaField;
+            }
+            set {
+                this.xmlAddendaField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public InformacionAdicional informacionAdicional {
+            get {
+                return this.informacionAdicionalField;
+            }
+            set {
+                this.informacionAdicionalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public informacionFacto informacionFacto {
+            get {
+                return this.informacionFactoField;
+            }
+            set {
+                this.informacionFactoField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.SerializableAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
     public enum enumTipoCfdi {
         
@@ -8831,27 +8790,71 @@ namespace ServiceTramasMicros.Facto {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
-    public delegate void generarCfdiCompletedEventHandler(object sender, generarCfdiCompletedEventArgs e);
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class generarCfdiCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
+    public partial class EndPointRequest {
         
-        private object[] results;
+        private Cfdi cfdiField;
         
-        internal generarCfdiCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
-                base(exception, cancelled, userState) {
-            this.results = results;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public Cfdi cfdi {
+            get {
+                return this.cfdiField;
+            }
+            set {
+                this.cfdiField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2053.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://ejb.endpoint.hospitality.nexttech.mx.com/")]
+    public partial class uuidResponse {
+        
+        private bool canceladoField;
+        
+        private string mensajeField;
+        
+        private string uuidField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool cancelado {
+            get {
+                return this.canceladoField;
+            }
+            set {
+                this.canceladoField = value;
+            }
         }
         
         /// <remarks/>
-        public endPointCfdiResponse Result {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string mensaje {
             get {
-                this.RaiseExceptionIfNecessary();
-                return ((endPointCfdiResponse)(this.results[0]));
+                return this.mensajeField;
+            }
+            set {
+                this.mensajeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string uuid {
+            get {
+                return this.uuidField;
+            }
+            set {
+                this.uuidField = value;
             }
         }
     }
@@ -8910,26 +8913,26 @@ namespace ServiceTramasMicros.Facto {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
-    public delegate void procesarIntegracionCompletedEventHandler(object sender, procesarIntegracionCompletedEventArgs e);
+    public delegate void generarCfdiCompletedEventHandler(object sender, generarCfdiCompletedEventArgs e);
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class procesarIntegracionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class generarCfdiCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
         
         private object[] results;
         
-        internal procesarIntegracionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+        internal generarCfdiCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
                 base(exception, cancelled, userState) {
             this.results = results;
         }
         
         /// <remarks/>
-        public endPointIntegracionResponse Result {
+        public endPointCfdiResponse Result {
             get {
                 this.RaiseExceptionIfNecessary();
-                return ((endPointIntegracionResponse)(this.results[0]));
+                return ((endPointCfdiResponse)(this.results[0]));
             }
         }
     }
@@ -8956,6 +8959,32 @@ namespace ServiceTramasMicros.Facto {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((receptor)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    public delegate void procesarIntegracionCompletedEventHandler(object sender, procesarIntegracionCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class procesarIntegracionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal procesarIntegracionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public endPointIntegracionResponse Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((endPointIntegracionResponse)(this.results[0]));
             }
         }
     }

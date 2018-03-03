@@ -9,13 +9,13 @@ namespace ServiceTramasMicros.Model
 {
     public class Funciones
     {
-        public static void EscribeLog(string sEvent, EventLogEntryType tipoEvento)
+        public static void EscribeLog(string sEvent, EventLogEntryType tipoEvento, bool writeInLocalLog = true)
         {
             string sSource;
             string sLog;
             try
             {
-                sSource = "ServiceTramasMicros";
+                sSource = "FactoSender";
                 sLog = "Application";
                 if (!EventLog.SourceExists(sSource))
                     EventLog.CreateEventSource(sSource, sLog);
@@ -25,18 +25,25 @@ namespace ServiceTramasMicros.Model
             {
             }
 
-            try
+            if (!writeInLocalLog)
             {
-                string carpetaLogs = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + @"\Logs\";
-                if (!Directory.Exists(carpetaLogs))
-                    Directory.CreateDirectory(carpetaLogs);
-
-                string carpetaLogEvent = carpetaLogs + "LogEvent" + DateTime.Now.ToString("yyyy-MM-dd") + "_log.txt";
-                LogWriter logEventsObject = new LogWriter(sEvent, carpetaLogEvent
-                                                        , "NA", "NA", carpetaLogEvent, "NA");
+                return;
             }
-            catch (Exception)
+            else
             {
+                try
+                {
+                    string carpetaLogs = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\') + @"\Logs\";
+                    if (!Directory.Exists(carpetaLogs))
+                        Directory.CreateDirectory(carpetaLogs);
+
+                    string carpetaLogEvent = carpetaLogs + "LogEvent" + DateTime.Now.ToString("yyyy-MM-dd") + "_log.txt";
+                    LogWriter logEventsObject = new LogWriter(sEvent, carpetaLogEvent
+                                                            , "NA", "NA", carpetaLogEvent, "NA");
+                }
+                catch (Exception)
+                {
+                }
             }
         }
     }

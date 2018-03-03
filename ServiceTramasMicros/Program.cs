@@ -11,21 +11,21 @@ namespace ServiceTramasMicros
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main()
+        static void Main(string[] args)
         {
-//#if (!DEBUG)
+#if (!DEBUG)
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
                 new ServicioTramasMicros() 
             };
             ServiceBase.Run(ServicesToRun);
-//#else
-//            //Debug
-//                        ServicioTramasMicros servicio = new ServicioTramasMicros();
-//                        servicio.Process();
-//                        System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
-//            #endif
-        }
+#else
+            //Debug
+            ServicioTramasMicros servicio = new ServicioTramasMicros();
+            servicio.Process();
+            System.Threading.Thread.Sleep(System.Threading.Timeout.Infinite);
+#endif
+        }        
     }
 }

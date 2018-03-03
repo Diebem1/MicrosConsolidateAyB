@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="+qYJMOPd/9gTB0w99jYXSyfepWM=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="b5vlnazEJ1vYccGT1cBJ1zl7VEQ=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="BasicHttpBinding_IService1">
       <properties>
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="BasicHttpsBinding_IService1" contract="WSLogMicros.IService1" bindingType="basicHttpBinding" address="https://nterrorsinfo.azurewebsites.net/Service1.svc" bindingConfiguration="BasicHttpsBinding_IService1">
+    <endpoint name="BasicHttpsBinding_IService1" contract="WSLogMicros.IService1" bindingType="basicHttpBinding" address="https://nterrorsinfo/Service1.svc" bindingConfiguration="BasicHttpsBinding_IService1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://nterrorsinfo.azurewebsites.net/Service1.svc</serializedValue>
+          <serializedValue>https://nterrorsinfo/Service1.svc</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

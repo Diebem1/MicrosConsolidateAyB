@@ -1,8 +1,8 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ServiceTramasMicros.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FactoSender.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="ServiceTramasMicros_Facto_FactoEndPointsService" Type="(Web Service URL)" Scope="Application">
+    <Setting Name="FactoSender_Facto_FactoEndPointsService" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://hyatt33.factocloud.com.mx:80/facto/FactoEndPointsService</Value>
     </Setting>
   </Settings>

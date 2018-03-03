@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ServiceTramasMicros.Properties {
+namespace FactoSender.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -27,9 +27,9 @@ namespace ServiceTramasMicros.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
         [global::System.Configuration.DefaultSettingValueAttribute("http://hyatt33.factocloud.com.mx:80/facto/FactoEndPointsService")]
-        public string ServiceTramasMicros_Facto_FactoEndPointsService {
+        public string FactoSender_Facto_FactoEndPointsService {
             get {
-                return ((string)(this["ServiceTramasMicros_Facto_FactoEndPointsService"]));
+                return ((string)(this["FactoSender_Facto_FactoEndPointsService"]));
             }
         }
     }
