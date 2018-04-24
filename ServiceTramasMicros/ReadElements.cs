@@ -384,23 +384,35 @@ namespace ServiceTramasMicros
                     agrupado.promocionDesc = "";
                     agrupado.ivaPorcentaje = 1;
                     agrupado.tipoCambio = 1;
+                    #region Impuesto
                     impTrasladado impTraISH = new impTrasladado();
                     impTraISH.impuesto = "IVA";
-                    if (layout.ltsImpuestos != null && layout.ltsImpuestos.Count() > 0)
+                    string currentImporteItem = "0";
+                    try
                     {
-                        impTraISH.importe = Convert.ToDecimal(layout.ltsImpuestos[0].Split('|')[12]);
-                        impTraISH.tasa = Convert.ToDecimal(layout.ltsImpuestos[0].Split('|')[8]);
-                        sumaImpuestos = sumaImpuestos + Convert.ToDecimal(layout.ltsImpuestos[0].Split('|')[12]);
+                        currentImporteItem = item.Split('|')[12].Trim();
                     }
-                    else
+                    catch (Exception)
                     {
-                        impTraISH.importe = Convert.ToDecimal(0);
-                        impTraISH.tasa = Convert.ToDecimal(0);
-                        sumaImpuestos = sumaImpuestos + 0;
                     }
+                    string currentTasaItem = "0";
+                    try
+                    {
+                        currentTasaItem = item.Split('|')[8].Trim();
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    impTraISH.importe = Convert.ToDecimal(currentImporteItem);
+                    impTraISH.tasa = Convert.ToDecimal(currentTasaItem);
+                    sumaImpuestos = sumaImpuestos + impTraISH.importe;
+
                     impTrasladado[] imp = new impTrasladado[1];
                     imp[0] = impTraISH;
                     agrupado.impTrasladado = imp;
+                    #endregion
+
                     concepto.tipoDeCargo = enumTipoDeCargo.RECURRENTE;
                     concepto.cantidadFacturada = 1;
                     concepto.descripcion = new string[1];
