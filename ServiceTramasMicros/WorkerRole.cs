@@ -820,16 +820,20 @@ namespace ServiceTramasMicros
         /// <returns></returns>
         public FactoSender.Facto.endPointIntegracionResponse EnviarDatosFacto(string nombreArchivo, LogWriter logObjectTrama)
         {
+            logObjectTrama.LogWrite("Objeto Facto ", LogWriter.EnumTipoError.Important);
             FactoSender.Facto.endPointIntegracionResponse respuesta = new FactoSender.Facto.endPointIntegracionResponse();
             try
             {
+                logObjectTrama.LogWrite("Se establesera protocolo Tls12 ", LogWriter.EnumTipoError.Important);
+                //parametro para soportar protocolo https 
+                //se crean las clases SecurityProtocolTypeExtensions.cs y SslProtocolsExtensions.cs
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls12;
+
                 using (FactoSender.Facto.FactoEndPointsService servicio = new FactoSender.Facto.FactoEndPointsService())
                 {
+                    logObjectTrama.LogWrite("Conectando... "+servicio.Url, LogWriter.EnumTipoError.Important);
                     FactoSender.Facto.endPointIntegracionRequest request = new FactoSender.Facto.endPointIntegracionRequest();
-                    //parametro para soportar protocolo https 
-                    //se crean las clases SecurityProtocolTypeExtensions.cs y SslProtocolsExtensions.cs
-                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls12;
-            
+                    
                     Emisor em = null;
                     FactoSender.Facto.enumVersionCfdiIntegracion versionCfdi =
                             (FactoSender.Facto.enumVersionCfdiIntegracion)System.Enum.Parse(typeof(FactoSender.Facto.enumVersionCfdiIntegracion), cfn.FactoVersion);

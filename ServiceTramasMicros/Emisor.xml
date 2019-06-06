@@ -26,15 +26,15 @@
 		<TramasHistoricas>C:\Micros\Facto\TramasHistoricas</TramasHistoricas>
     
 		<!--Valores posibles para FactoVersion[VERSION_32|VERSION_33|DOCUMENTO_FISCAL|MICROS_ROSEWOOD] Requerido-->
-		<FactoVersion>DOCUMENTO_FISCAL</FactoVersion>
+		<FactoVersion>VERSION_33</FactoVersion>
     
 		<!--Ruta completa para copiar tramas procesadas con exito. Parametro Opcional-->
 		<ClonarTrama></ClonarTrama>    
 	</config>
   <!--Nodo Emisor por lo menos uno es requerido, debe contener un solo elemento RFC y por lo menos un elemento Identificador, con atributo numero y un valor como identificador-->
   <emisor>
-    <RFC>Aqui_RFC</RFC>
-    <Identificador numero="Aqui_ID_Micros">Aqui_Reemplazo</Identificador>
+    <RFC>Aqui_Dato_RFC</RFC>
+    <Identificador numero="Aqui_Numero_Micros">Aqui_Numero_Reemplazo_Facto</Identificador>
   </emisor>
   
   <!--Si se desean agregar mas emisores utilice la siguiente estructura omitiendo los caracteres de comentarios XML-->
