@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml.Linq;
@@ -825,6 +826,10 @@ namespace ServiceTramasMicros
                 using (FactoSender.Facto.FactoEndPointsService servicio = new FactoSender.Facto.FactoEndPointsService())
                 {
                     FactoSender.Facto.endPointIntegracionRequest request = new FactoSender.Facto.endPointIntegracionRequest();
+                    //parametro para soportar protocolo https 
+                    //se crean las clases SecurityProtocolTypeExtensions.cs y SslProtocolsExtensions.cs
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolTypeExtensions.Tls12;
+            
                     Emisor em = null;
                     FactoSender.Facto.enumVersionCfdiIntegracion versionCfdi =
                             (FactoSender.Facto.enumVersionCfdiIntegracion)System.Enum.Parse(typeof(FactoSender.Facto.enumVersionCfdiIntegracion), cfn.FactoVersion);
@@ -881,6 +886,7 @@ namespace ServiceTramasMicros
             }
             catch (System.Net.WebException exNetWeb)
             {
+                Console.WriteLine(">>> "+exNetWeb.Message);
                 string netWebStatus = (exNetWeb != null && exNetWeb.Status != null ? exNetWeb.Status.ToString() : "null");
                 string netWebInner = (exNetWeb.InnerException != null ? exNetWeb.InnerException.Message : "null");
                 string mensajeException = "Fallo de comunicación con Facto"
